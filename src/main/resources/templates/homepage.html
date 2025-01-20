@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <img src="/images/logo.png" alt="Logo" class="logo">
+            <a href="/" class="nav-link">Home</a>
+            <a href="/competitions" class="nav-link">Competitions</a>
+            <a href="/my-registrations" class="nav-link">My Registrations</a>
+            <a href="/calendar" class="nav-link">Calendar</a>
+        </div>
+        <div class="navbar-right">
+            <span class="username">Your Name</span>
+            <img src="/images/profile-icon.png" alt="Profile" class="profile-icon" onclick="toggleDropdown()">
+            <div id="dropdown" class="dropdown-content">
+                <a href="/profile">Profile</a>
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="dropdown-link">Log Out</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>Welcome to the Competition Registration System</h1>
+        <p>Use the navigation bar to explore different sections. SuperBrawl Events</p>
+
+    </div>
+    <script>
+        function toggleDropdown() {
+            document.getElementById('dropdown').classList.toggle('show');
+        }
+        window.onclick = function(event) {
+            if (!event.target.matches('.profile-icon')) {
+                var dropdowns = document.getElementsByClassName('dropdown-content');
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
+<!--    <a class="btn btn-success" th:href="@{/charge}">Create One-Time Charge</a>-->
