@@ -25,6 +25,20 @@ public class UsuariService {
         return usuariRepository.save(usuari);
     }
 
+    public Usuari updateUsuari(Long id, Usuari usuari) {
+        Usuari usuariToUpdate = usuariRepository.findById(id).orElse(null);
+        if (usuariToUpdate != null) {
+            usuariToUpdate.setNom(usuari.getNom());
+            usuariToUpdate.setCognoms(usuari.getCognoms());
+            usuariToUpdate.setNomUsuari(usuari.getNomUsuari());
+            usuariToUpdate.setEmail(usuari.getEmail());
+            usuariToUpdate.setContrasenya(usuari.getContrasenya());
+            usuariToUpdate.setIdRol(usuari.getIdRol());
+            return usuariRepository.save(usuariToUpdate);
+        }
+        return null;
+    }
+
     public void deleteUsuari(Long id) {
         usuariRepository.deleteById(id);
     }
