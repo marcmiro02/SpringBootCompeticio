@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Competicions Esportives</title>
+</head>
+<body>
+<!-- Inici del Navbar -->
+<nav>
+    <ul>
+        <li><a href="/inici">Inici</a></li>
+        <li><a href="/les-meves-competicions">Les Meves Competicions</a></li>
+        <li><a href="/perfil">Perfil</a></li>
+    </ul>
+</nav>
+<!-- Fi del Navbar -->
+
+<!-- Aquí es carreguen les altres pàgines -->
+<div class="content">
+    <div th:replace="${body}"></div>
+</div>
+
+<!-- Començament del Footer (si en vols afegir) -->
+<footer>
+    <p>&copy; 2025 Competicions Esportives. Tots els drets reservats.</p>
+</footer>
+</body>
+</html>

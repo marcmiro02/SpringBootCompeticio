@@ -2,48 +2,161 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Index</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        /* Navbar Styles */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #007bff;
+            padding: 10px 20px;
+        }
+        .navbar-left {
+            display: flex;
+            align-items: center;
+        }
+        .logo {
+            width: 40px;
+            height: 40px;
+            margin-right: 20px;
+        }
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            margin-right: 20px;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+        .nav-link:hover {
+            color: #ffd700;
+        }
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        .username {
+            color: white;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .profile-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 40px;
+            background-color: #fff;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            border-radius: 5px;
+            width: 200px;
+        }
+        .dropdown-content a,
+        .dropdown-content button {
+            padding: 10px 20px;
+            text-align: left;
+            width: 100%;
+            border: none;
+            background: none;
+            color: #333;
+            cursor: pointer;
+        }
+        .dropdown-content a:hover,
+        .dropdown-content button:hover {
+            background-color: #f1f1f1;
+        }
+        .dropdown-link {
+            border: none;
+            background: none;
+            padding: 10px 20px;
+            width: 100%;
+            color: #333;
+            cursor: pointer;
+        }
+        .dropdown-link:hover {
+            background-color: #f1f1f1;
+        }
+        .show {
+            display: block;
+        }
+
+        /* Main content */
+        .container {
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #333;
+        }
+
+        p {
+            font-size: 18px;
+            color: #555;
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="navbar-left">
-            <img src="/images/logo.png" alt="Logo" class="logo">
-            <a href="/" class="nav-link">Home</a>
-            <a href="/competitions" class="nav-link">Competitions</a>
-            <a href="/my-registrations" class="nav-link">My Registrations</a>
-            <a href="/calendar" class="nav-link">Calendar</a>
-        </div>
-        <div class="navbar-right">
-            <span class="username">Your Name</span>
-            <img src="/images/profile-icon.png" alt="Profile" class="profile-icon" onclick="toggleDropdown()">
-            <div id="dropdown" class="dropdown-content">
-                <a href="/profile">Profile</a>
-                <form th:action="@{/logout}" method="post">
-                    <button type="submit" class="dropdown-link">Log Out</button>
-                </form>
-            </div>
-        </div>
-    </nav>
-    <div class="container">
-        <h1>Welcome to the Competition Registration System</h1>
-        <p>Use the navigation bar to explore different sections.</p>
+<!-- Navigation Bar -->
+<nav class="navbar">
+    <div class="navbar-left">
+        <img src="/templates/images/logos/DAM_sense_fons.png" alt="Logo" class="logo">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/competitions" class="nav-link">Competitions</a>
+        <a href="/my-registrations" class="nav-link">My Registrations</a>
+        <a href="/calendar" class="nav-link">Calendar</a>
     </div>
-    <script>
-        function toggleDropdown() {
-            document.getElementById('dropdown').classList.toggle('show');
-        }
-        window.onclick = function(event) {
-            if (!event.target.matches('.profile-icon')) {
-                var dropdowns = document.getElementsByClassName('dropdown-content');
-                for (var i = 0; i < dropdowns.length; i++) {
-                    var openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('show')) {
-                        openDropdown.classList.remove('show');
-                    }
+    <div class="navbar-right">
+        <!-- Thymeleaf per mostrar el nom d'usuari -->
+        <span class="username">Your Name</span>
+        <img src="/templates/images/usuaris/default.png" alt="Profile" class="profile-icon" onclick="toggleDropdown()">
+        <div id="dropdown" class="dropdown-content">
+            <a href="/profile">Profile</a>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="dropdown-link">Log Out</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container">
+    <h1>Welcome to the Competition Registration System</h1>
+    <p>Use the navigation bar to explore different sections.</p>
+</div>
+
+<script>
+    function toggleDropdown() {
+        document.getElementById('dropdown').classList.toggle('show');
+    }
+
+    window.onclick = function(event) {
+        if (!event.target.matches('.profile-icon')) {
+            var dropdowns = document.getElementsByClassName('dropdown-content');
+            for (var i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
                 }
             }
         }
-    </script>
+    }
+</script>
 </body>
 </html>

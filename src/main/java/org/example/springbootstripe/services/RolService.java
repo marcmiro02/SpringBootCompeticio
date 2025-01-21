@@ -28,6 +28,14 @@ public class RolService {
         return rol.orElse(null);
     }
 
+    public Rol updateRol(Long id, Rol updatedRol) {
+        if (rolRepository.existsById(id)) {
+            updatedRol.setId(id);
+            return rolRepository.save(updatedRol);
+        }
+        return null;
+    }
+
     public void deleteRol(Long id) {
         if (rolRepository.existsById(id)) {
             rolRepository.deleteById(id);
