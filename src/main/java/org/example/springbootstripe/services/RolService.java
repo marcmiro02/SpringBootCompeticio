@@ -41,4 +41,7 @@ public class RolService {
             rolRepository.deleteById(id);
         }
     }
+    public List<Rol> findAll() {
+        return rolRepository.findAll();
+    }
 }

@@ -29,6 +29,12 @@ public class Competicio {
     @Column(name = "data_fi", nullable = false)
     private LocalDate dataFi;
 
+    @Column(name = "edat_min")
+    private Integer edatMin;
+
+    @Column(name = "edat_max")
+    private Integer edatMax;
+
     public Long getId() {
         return id;
     }
@@ -83,5 +89,21 @@ public class Competicio {
 
     public void setDataFi(LocalDate dataFi) {
         this.dataFi = dataFi;
+    }
+
+    public Integer getEdatMin() {
+        return edatMin;
+    }
+
+    public void setEdatMin(Integer edatMin) {
+        this.edatMin = edatMin;
+    }
+
+    public Integer getEdatMax() {
+        return edatMax;
+    }
+
+    public void setEdatMax(Integer edatMax) {
+        this.edatMax = edatMax;
     }
 }
