@@ -7,10 +7,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.example.springbootstripe.dto.CompeticioDTO;
 
+
+
+
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/competicions")
@@ -59,10 +67,14 @@ public class CompeticioController {
             @RequestParam("categoria") String categoria,
             @RequestParam("dataInici") String dataInici,
             @RequestParam("dataFi") String dataFi,
-
-            // Los nuevos parámetros para edad mínima y máxima
             @RequestParam(value = "edat_min", required = false) Integer edatMin,
-            @RequestParam(value = "edat_max", required = false) Integer edatMax) {
+            @RequestParam(value = "edat_max", required = false) Integer edatMax,
+            @RequestParam("foto_portada") MultipartFile fotoPortada,
+            @RequestParam("preu") Double preu,
+            @RequestParam("ubicacio") String ubicacio,
+            @RequestParam("provincia_nombre") String provinciaNombre, // Ahora recibe el nombre de la provincia
+            @RequestParam("ciudad_nombre") String ciudadNombre // Ahora recibe el nombre de la ciudad
+    ) {
 
         Competicio competicio = new Competicio();
         competicio.setNom(name);
@@ -71,8 +83,11 @@ public class CompeticioController {
         competicio.setCategoria(categoria);
         competicio.setDataInici(LocalDate.parse(dataInici));
         competicio.setDataFi(LocalDate.parse(dataFi));
+        competicio.setPreu(preu);
+        competicio.setUbicacio(ubicacio);
+        competicio.setPoblacio(ciudadNombre);  // Se guarda el nombre de la ciudad
+        competicio.setProvincia(provinciaNombre);  // Se guarda el nombre de la provincia
 
-        // Asignar los valores de edat_min y edat_max, si están presentes
         if (edatMin != null) {
             competicio.setEdatMin(edatMin);
         }
@@ -81,10 +96,40 @@ public class CompeticioController {
             competicio.setEdatMax(edatMax);
         }
 
-        // Guardar la competición
+        if (!fotoPortada.isEmpty()) {
+            try {
+                competicio.setFotoPortada(fotoPortada.getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         competicioService.saveCompeticio(competicio);
 
-        return "redirect:/competicions";
+        return "redirect:/competicions/all";
+    }
+
+    @GetMapping("/all")
+    public String getActiveCompeticions(Model model) {
+        List<Competicio> activeCompeticions = competicioService.findActiveCompeticions();
+
+        // Convertir la imagen a Base64 antes de enviarla a la vista
+        List<CompeticioDTO> competicionsDTO = activeCompeticions.stream().map(competicio -> {
+            CompeticioDTO dto = new CompeticioDTO();
+            dto.setNom(competicio.getNom());
+            dto.setCategoria(competicio.getCategoria());
+            dto.setDataInici(competicio.getDataInici().toString());
+
+            if (competicio.getFotoPortada() != null) {
+                String base64Image = Base64.getEncoder().encodeToString(competicio.getFotoPortada());
+                dto.setFotoPortada("data:image/jpeg;base64," + base64Image);
+            }
+
+            return dto;
+        }).collect(Collectors.toList());
+
+        model.addAttribute("competicions", competicionsDTO);
+        return "competicio/competicions";
     }
 
 }

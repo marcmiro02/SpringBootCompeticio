@@ -35,6 +35,23 @@ public class Competicio {
     @Column(name = "edat_max")
     private Integer edatMax;
 
+    @Lob
+    @Column(name = "foto_portada")
+    private byte[] fotoPortada;
+
+    @Column(name = "preu", nullable = false)
+    private Double preu;
+
+    @Column(name = "ubicacio")
+    private String ubicacio;
+
+    @Column(name = "poblacio", nullable = false)
+    private String poblacio;
+
+    @Column(name = "provincia", nullable = false)
+    private String provincia;
+
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -105,5 +122,45 @@ public class Competicio {
 
     public void setEdatMax(Integer edatMax) {
         this.edatMax = edatMax;
+    }
+
+    public byte[] getFotoPortada() {
+        return fotoPortada;
+    }
+
+    public void setFotoPortada(byte[] fotoPortada) {
+        this.fotoPortada = fotoPortada;
+    }
+
+    public Double getPreu() {
+        return preu;
+    }
+
+    public void setPreu(Double preu) {
+        this.preu = preu;
+    }
+
+    public String getUbicacio() {
+        return ubicacio;
+    }
+
+    public void setUbicacio(String ubicacio) {
+        this.ubicacio = ubicacio;
+    }
+
+    public String getPoblacio() {
+        return poblacio;
+    }
+
+    public void setPoblacio(String poblacio) {
+        this.poblacio = poblacio;
+    }
+
+    public String getProvincia() {
+        return provincia;
+    }
+
+    public void setProvincia(String provincia) {
+        this.provincia = provincia;
     }
 }

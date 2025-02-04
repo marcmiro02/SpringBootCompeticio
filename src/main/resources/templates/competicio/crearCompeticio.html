@@ -11,7 +11,7 @@
     <div class="card shadow-sm">
         <div class="card-body">
             <h1 class="card-title text-center mb-4">Crear Competició</h1>
-            <form action="/competicions/create" method="post">
+            <form action="/competicions/create" method="post" enctype="multipart/form-data">
                 <!-- Campos principales -->
                 <div class="mb-3">
                     <label for="name" class="form-label">Nom de la competicio: </label>
@@ -45,6 +45,33 @@
                     <label for="dataFi" class="form-label">End Date:</label>
                     <input type="date" id="dataFi" name="dataFi" class="form-control" required>
                 </div>
+
+                <!-- Campo para la imagen de portada -->
+                <div class="mb-3">
+                    <label for="foto_portada" class="form-label">Imagen de Portada:</label>
+                    <input type="file" id="foto_portada" name="foto_portada" class="form-control" accept="image/*">
+                </div>
+
+                <!-- Nuevos campos -->
+                <div class="mb-3">
+                    <label for="preu" class="form-label">Preu:</label>
+                    <input type="number" step="0.01" id="preu" name="preu" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="ubicacio" class="form-label">Ubicació:</label>
+                    <input type="text" id="ubicacio" name="ubicacio" class="form-control">
+                </div>
+
+                <!-- Selección de provincia -->
+                <select id="provincia" name="provincia" class="form-control" onchange="loadCities(this.value)" required>
+                    <option value="">Seleccione una provincia</option>
+                </select>
+
+                <!-- Selección de ciudad -->
+                <select id="poblacio" name="poblacio" class="form-control" required>
+                    <option value="">Seleccione una ciudad</option>
+                </select>
 
                 <!-- Requisitos -->
                 <h2 class="h5 mt-4">Requisits</h2>
@@ -93,6 +120,76 @@
         var checkBox = document.getElementById('edadMaxCheck');
         edadMaxInput.style.display = checkBox.checked ? 'block' : 'none';
     }
+
+    // Función para cargar provincias
+    function loadProvinces() {
+        fetch('/api/provincias') // Asegúrate de que la URL sea correcta
+            .then(response => response.json())
+            .then(data => {
+                const provinciaSelect = document.getElementById('provincia');
+                provinciaSelect.innerHTML = '<option value="">Seleccione una provincia</option>';
+                data.forEach(provincia => {
+                    const option = document.createElement('option');
+                    option.value = provincia.id; // Usamos el ID de la provincia
+                    option.textContent = provincia.nombre; // Mostramos el nombre de la provincia
+                    provinciaSelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error al cargar provincias:', error);
+            });
+    }
+
+    // Función para cargar ciudades por el ID de la provincia
+    function loadCities(provinciaId) {
+        if (!provinciaId) return; // Si no hay provincia seleccionada, no hacemos nada
+
+        fetch(`/api/ciudades?provinciaId=${provinciaId}`) // Enviar el ID de la provincia
+            .then(response => response.json())
+            .then(data => {
+                const ciudadesSelect = document.getElementById('poblacio');
+                ciudadesSelect.innerHTML = '<option value="">Seleccione una ciudad</option>';
+                data.forEach(ciudad => {
+                    const option = document.createElement('option');
+                    option.value = ciudad.id; // Enviar el ID de la ciudad
+                    option.textContent = ciudad.nombre; // Mostrar el nombre de la ciudad
+                    ciudadesSelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error al cargar ciudades:', error);
+            });
+    }
+
+    // Función para modificar el valor de los campos antes de enviar el formulario
+    document.querySelector('form').addEventListener('submit', function (event) {
+        // Obtener la provincia y ciudad seleccionadas
+        var provinciaSelect = document.getElementById('provincia');
+        var poblacioSelect = document.getElementById('poblacio');
+
+        // Obtener el texto (nombre) de la provincia y ciudad seleccionadas
+        var provinciaNombre = provinciaSelect.options[provinciaSelect.selectedIndex].text;
+        var ciudadNombre = poblacioSelect.options[poblacioSelect.selectedIndex].text;
+
+        // Establecer los valores de los campos hidden para enviar los nombres en lugar de los IDs
+        var provinciaHidden = document.createElement('input');
+        provinciaHidden.type = 'hidden';
+        provinciaHidden.name = 'provincia_nombre'; // Campo para el nombre de la provincia
+        provinciaHidden.value = provinciaNombre;
+        this.appendChild(provinciaHidden);
+
+        var ciudadHidden = document.createElement('input');
+        ciudadHidden.type = 'hidden';
+        ciudadHidden.name = 'ciudad_nombre'; // Campo para el nombre de la ciudad
+        ciudadHidden.value = ciudadNombre;
+        this.appendChild(ciudadHidden);
+    });
+
+    // Cargar provincias cuando la página se carga
+    document.addEventListener('DOMContentLoaded', function () {
+        loadProvinces();
+    });
 </script>
 </body>
 </html>
+

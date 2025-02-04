@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Active Competitions</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-light">
+<!-- En competicions.html -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+
+<div class="container mt-5">
+  <h1 class="text-center mb-4">🏆 Active Competitions</h1>
+
+  <div class="row">
+    <!-- Itera sobre cada competición -->
+    <div th:each="competicio : ${competicions}" class="col-md-4 mb-4">
+      <div class="card shadow-sm">
+        <!-- Imagen de portada -->
+        <img th:if="${competicio.fotoPortada != null}"
+             th:src="${competicio.fotoPortada}"
+             class="card-img-top img-fluid"
+             alt="Competition Image">
+
+        <div class="card-body">
+          <h5 class="card-title" th:text="${competicio.nom}">Competition Name</h5>
+          <p class="card-text">
+            <strong>Category:</strong> <span th:text="${competicio.categoria}">Category</span><br>
+            <i class="fa-solid fa-calendar-days"></i>
+            <span th:text="${competicio.dataInici}">Start Date</span> -
+            <span th:text="${competicio.dataFinal}">End Date</span>
+
+          </p>
+          <a href="#" class="btn btn-primary">View Details</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
