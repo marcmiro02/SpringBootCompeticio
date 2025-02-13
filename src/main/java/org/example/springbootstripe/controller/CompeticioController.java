@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Base64;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -113,12 +112,13 @@ public class CompeticioController {
     public String getActiveCompeticions(Model model) {
         List<Competicio> activeCompeticions = competicioService.findActiveCompeticions();
 
-        // Convertir la imagen a Base64 antes de enviarla a la vista
         List<CompeticioDTO> competicionsDTO = activeCompeticions.stream().map(competicio -> {
             CompeticioDTO dto = new CompeticioDTO();
+            dto.setId(competicio.getId());
             dto.setNom(competicio.getNom());
             dto.setCategoria(competicio.getCategoria());
             dto.setDataInici(competicio.getDataInici().toString());
+            dto.setDataFi(competicio.getDataFi().toString());
 
             if (competicio.getFotoPortada() != null) {
                 String base64Image = Base64.getEncoder().encodeToString(competicio.getFotoPortada());
@@ -130,6 +130,31 @@ public class CompeticioController {
 
         model.addAttribute("competicions", competicionsDTO);
         return "competicio/competicions";
+    }
+    @GetMapping("/{id}")
+    public String getCompeticioById(@PathVariable Long id, Model model) {
+        Competicio competicio = competicioService.getCompeticioById(id);
+
+        CompeticioDTO competicioDTO = new CompeticioDTO();
+        competicioDTO.setNom(competicio.getNom());
+        competicioDTO.setCategoria(competicio.getCategoria());
+        competicioDTO.setDataInici(competicio.getDataInici().toString());
+        competicioDTO.setDataFi(competicio.getDataFi().toString());
+        competicioDTO.setDescripcio(competicio.getDescripcio());
+        competicioDTO.setCapacitat(competicio.getCapacitat());
+        competicioDTO.setPreu(competicio.getPreu());
+        competicioDTO.setUbicacio(competicio.getUbicacio());
+        competicioDTO.setPoblacio(competicio.getPoblacio());
+        competicioDTO.setProvincia(competicio.getProvincia());
+
+        if (competicio.getFotoPortada() != null) {
+            String base64Image = Base64.getEncoder().encodeToString(competicio.getFotoPortada());
+            competicioDTO.setFotoPortada("data:image/jpeg;base64," + base64Image);
+        }
+
+        model.addAttribute("competicio", competicioDTO);
+
+        return "competicio/competicio"; // La ruta de la vista Thymeleaf
     }
 
 }

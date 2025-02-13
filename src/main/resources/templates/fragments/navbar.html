@@ -1,17 +1,74 @@
-<!-- src/main/resources/templates/fragments/navbar.html -->
 <div th:fragment="navbar">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="/static">MyApp</a>
+    <style>
+        /* Estilos para ajustar el logo y el nombre */
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+        }
+        .navbar-brand img {
+            height: 40px; /* Ajusta la altura del logo según necesites */
+            margin-right: 10px; /* Espacio entre el logo y el texto */
+        }
+        .navbar-brand span {
+            font-size: 1.5rem; /* Tamaño del texto */
+            font-weight: bold;
+        }
+
+        /* Para centrar el menú en dispositivos grandes */
+        .navbar-nav.centered-menu {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Menú de competiciones alineado al centro */
+        .navbar-nav.ms-auto {
+            margin-left: auto;
+            margin-right: 0;
+        }
+
+        /* Menú desplegable de perfil, ajustado a la derecha */
+        .navbar-nav.ms-auto .nav-item {
+            margin-left: 15px;
+            margin-right: 25px;
+        }
+    </style>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <div class="container-fluid">
+            <!-- Logo y nombre de la aplicación -->
+            <a class="navbar-brand" href="/static">
+                <img src="../images/DAM.png"> <!-- Ruta del logo -->
+                <span>SportCat</span>
+            </a>
+
+            <!-- Botón para móviles -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
+            <!-- Menú de navegación -->
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+                <!-- Menú de competiciones alineado al centro -->
+                <ul class="navbar-nav mx-auto centered-menu">
                     <li class="nav-item">
-                        <a class="nav-link" href="/competicions/all">Competicions</a>
+                        <a class="nav-link" href="/competicions/all">
+                            <i class="fas fa-list me-1"></i> <!-- Icono de lista -->
+                            Competicions
+                        </a>
                     </li>
-                    <!-- Puedes agregar más enlaces aquí si es necesario -->
+                </ul>
+
+                <!-- Menú desplegable del perfil a la derecha -->
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle profile-icon" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i>Benvingut</i> <!-- Icono de usuario -->
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/perfil">Perfil</a></li>
+                            <li><a class="dropdown-item" href="/logout">Cerrar sesión</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
