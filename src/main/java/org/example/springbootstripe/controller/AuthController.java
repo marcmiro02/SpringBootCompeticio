@@ -1,10 +1,10 @@
 package org.example.springbootstripe.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.example.springbootstripe.model.Rol;
 import org.example.springbootstripe.model.Usuari;
-
 import org.example.springbootstripe.repository.UsuariRepository;
-
 import org.example.springbootstripe.services.RolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -52,5 +52,21 @@ public class AuthController {
         usuari.setIdRol(id_rol);
         usuariRepository.save(usuari);
         return "redirect:/login";
+    }
+
+    @PostMapping("/login")
+    public String loginUser(@RequestParam String username, @RequestParam String password, HttpServletRequest request) {
+        Usuari usuari = usuariRepository.findByNomUsuari(username)
+                .orElse(null);
+
+        if (usuari != null && passwordEncoder.matches(password, usuari.getContrasenya())) {
+            HttpSession session = request.getSession();
+            session.setAttribute("username", usuari.getNomUsuari());
+            session.setAttribute("email", usuari.getEmail());
+            session.setAttribute("role", usuari.getIdRol());
+            return "redirect:/dashboard";
+        } else {
+            return "redirect:/login?error";
+        }
     }
 }

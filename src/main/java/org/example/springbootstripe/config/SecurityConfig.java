@@ -16,21 +16,24 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/register", "/login").permitAll()  // Permitir registro y login
-                        .anyRequest().authenticated()  // Autenticar cualquier otra petición
+                        .requestMatchers("/register", "/login").permitAll()  // Allow access to register and login pages
+                        .anyRequest().authenticated()  // Authenticate any other request
                 )
                 .formLogin(form -> form
-                        .loginPage("/login")  // Página de login personalizada
+                        .loginPage("/login")  // Custom login page
+                        .defaultSuccessUrl("/homepage", true)  // Redirect to homepage after successful login
                         .permitAll()
                 )
                 .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login")
                         .permitAll()
                 )
                 .rememberMe(rememberMe -> rememberMe
-                        .key("uniqueAndSecret")  // Reemplazar con tu propia clave secreta
-                        .tokenValiditySeconds(1209600)  // Validez del token en segundos (14 días)
+                        .key("uniqueAndSecret")  // Replace with your own secret key
+                        .tokenValiditySeconds(1209600)  // Token validity in seconds (14 days)
                 )
-                .csrf(csrf -> csrf.disable());  // Deshabilitar CSRF si es necesario
+                .csrf(csrf -> csrf.disable());  // Disable CSRF if necessary
 
         return http.build();
     }

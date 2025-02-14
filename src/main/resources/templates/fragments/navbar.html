@@ -2,6 +2,7 @@
     <style>
         /* Estilos para ajustar el logo y el nombre */
         .navbar-brand {
+            margin-left: 40px; /* Añade un margen a la izquierda */
             display: flex;
             align-items: center;
         }
@@ -10,25 +11,14 @@
             margin-right: 10px; /* Espacio entre el logo y el texto */
         }
         .navbar-brand span {
-            font-size: 1.5rem; /* Tamaño del texto */
+            font-size: 2rem; /* Tamaño del texto */
             font-weight: bold;
-        }
-
-        /* Para centrar el menú en dispositivos grandes */
-        .navbar-nav.centered-menu {
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* Menú de competiciones alineado al centro */
-        .navbar-nav.ms-auto {
-            margin-left: 30px;
-            margin-right: 0;
         }
 
         /* Menú desplegable de perfil, ajustado a la derecha */
         .navbar-nav.ms-auto .nav-item {
-            margin-left: 15px;
+
+            margin-left: 40px;
             margin-right: 25px;
         }
     </style>
@@ -37,7 +27,7 @@
         <div class="container-fluid me-4 ms-4"> <!-- Añadido márgenes a los lados -->
             <!-- Logo y nombre de la aplicación -->
             <a class="navbar-brand" href="/static">
-                <img src="/static/images/logos/logo.png" alt="Logo">
+                <img th:src="@{/images/logos/logo.png}" alt="SportCat Logo" class="logo">
                 <span>SportCat</span>
             </a>
 
@@ -48,18 +38,18 @@
 
             <!-- Menú de navegación -->
             <div class="collapse navbar-collapse" id="navbarNav">
-                <!-- Menú de competiciones alineado más a la derecha -->
-                <ul class="navbar-nav ms-auto"> <!-- Cambiado a ms-auto para alinear a la derecha -->
+                <!-- Menú de competiciones (sin ms-auto) -->
+                <ul class="navbar-nav ms-20"> <!-- ms-3 añade un margen izquierdo -->
                     <li class="nav-item">
                         <a class="nav-link" href="/competicions/all">
-                            <i class="fas fa-list me-1"></i> <!-- Icono de lista -->
+                            <i class="fas fa-list me-1"></i>
                             Competicions
                         </a>
                     </li>
                 </ul>
 
-                <!-- Menú desplegable del perfil a la derecha -->
-                <ul class="navbar-nav ms-auto">
+                <!-- Menú desplegable del perfil a la derecha (ms-auto) -->
+                <ul class="navbar-nav ms-auto"> <!-- ms-auto para pegarlo a la derecha -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle profile-icon" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i>Benvingut</i> <!-- Icono de usuario -->
