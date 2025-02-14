@@ -22,7 +22,7 @@
 
         /* Menú de competiciones alineado al centro */
         .navbar-nav.ms-auto {
-            margin-left: auto;
+            margin-left: 30px;
             margin-right: 0;
         }
 
@@ -34,10 +34,10 @@
     </style>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-        <div class="container-fluid">
+        <div class="container-fluid me-4 ms-4"> <!-- Añadido márgenes a los lados -->
             <!-- Logo y nombre de la aplicación -->
             <a class="navbar-brand" href="/static">
-                <img src="../images/DAM.png"> <!-- Ruta del logo -->
+                <img src="/static/images/logos/logo.png" alt="Logo">
                 <span>SportCat</span>
             </a>
 
@@ -48,8 +48,8 @@
 
             <!-- Menú de navegación -->
             <div class="collapse navbar-collapse" id="navbarNav">
-                <!-- Menú de competiciones alineado al centro -->
-                <ul class="navbar-nav mx-auto centered-menu">
+                <!-- Menú de competiciones alineado más a la derecha -->
+                <ul class="navbar-nav ms-auto"> <!-- Cambiado a ms-auto para alinear a la derecha -->
                     <li class="nav-item">
                         <a class="nav-link" href="/competicions/all">
                             <i class="fas fa-list me-1"></i> <!-- Icono de lista -->

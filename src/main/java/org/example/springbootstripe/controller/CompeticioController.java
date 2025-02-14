@@ -14,6 +14,7 @@ import org.example.springbootstripe.dto.CompeticioDTO;
 
 
 import java.io.IOException;
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.Base64;
 import java.util.List;
@@ -132,7 +133,7 @@ public class CompeticioController {
         return "competicio/competicions";
     }
     @GetMapping("/{id}")
-    public String getCompeticioById(@PathVariable Long id, Model model) {
+    public String getCompeticioById(@PathVariable Long id, Principal principal, Model model) {
         Competicio competicio = competicioService.getCompeticioById(id);
 
         CompeticioDTO competicioDTO = new CompeticioDTO();
@@ -152,9 +153,14 @@ public class CompeticioController {
             competicioDTO.setFotoPortada("data:image/jpeg;base64," + base64Image);
         }
 
+        if (principal != null) {
+            model.addAttribute("currentUser", principal.getName()); // Passar el nom de l'usuari loguejat
+        }
+
         model.addAttribute("competicio", competicioDTO);
 
         return "competicio/competicio"; // La ruta de la vista Thymeleaf
     }
+
 
 }

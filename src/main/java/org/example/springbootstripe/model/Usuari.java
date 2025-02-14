@@ -10,6 +10,10 @@ public class Usuari {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "id_rol")
+    private Rol rol; // Relación con el rol
+
     @Column(name = "nom", nullable = false)
     private String nom;
 
@@ -83,4 +87,9 @@ public class Usuari {
     public void setIdRol(Long idRol) {
         this.idRol = idRol;
     }
+    public Rol getRol() {
+        return rol;
+    }
+
+
 }
