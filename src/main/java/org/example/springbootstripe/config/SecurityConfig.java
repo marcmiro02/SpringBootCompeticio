@@ -1,26 +1,16 @@
 package org.example.springbootstripe.config;
 
-import org.example.springbootstripe.services.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-    private final UserDetailsServiceImpl userDetailsService;
-
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -37,8 +27,8 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .rememberMe(rememberMe -> rememberMe
-                        .key("uniqueAndSecret")
-                        .tokenValiditySeconds(1209600)  // 14 días
+                        .key("uniqueAndSecret")  // Reemplazar con tu propia clave secreta
+                        .tokenValiditySeconds(1209600)  // Validez del token en segundos (14 días)
                 )
                 .csrf(csrf -> csrf.disable());  // Deshabilitar CSRF si es necesario
 
@@ -48,10 +38,5 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
     }
 }

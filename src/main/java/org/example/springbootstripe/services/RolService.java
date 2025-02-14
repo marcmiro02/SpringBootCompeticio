@@ -44,4 +44,8 @@ public class RolService {
     public List<Rol> findAll() {
         return rolRepository.findAll();
     }
+    public Optional<Rol> findById(Long id) {
+        return rolRepository.findById(id);
+    }
+
 }

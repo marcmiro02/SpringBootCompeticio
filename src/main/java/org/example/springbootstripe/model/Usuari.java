@@ -2,6 +2,8 @@ package org.example.springbootstripe.model;
 
 import jakarta.persistence.*;
 
+import java.util.Collection;
+
 @Entity
 @Table(name = "usuaris")
 public class Usuari {
@@ -10,9 +12,7 @@ public class Usuari {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_rol")
-    private Rol rol; // Relación con el rol
+
 
     @Column(name = "nom", nullable = false)
     private String nom;
@@ -29,8 +29,8 @@ public class Usuari {
     @Column(name = "contrasenya", nullable = false)
     private String contrasenya;
 
-    @Column(name = "id_rol", nullable = false)
-    private Long idRol;
+
+     @Column(name = "id_rol", nullable = false) private Long idRol;
 
     public Long getId() {
         return id;
@@ -84,12 +84,9 @@ public class Usuari {
         return idRol;
     }
 
+
     public void setIdRol(Long idRol) {
         this.idRol = idRol;
     }
-    public Rol getRol() {
-        return rol;
-    }
-
 
 }
