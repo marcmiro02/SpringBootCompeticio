@@ -6,7 +6,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-image: url('https://images.unsplash.com/photo-1552674605-db6ffd4facb5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80'); /* Imagen de fondo deportivo */
+            background-image: url('https://images.unsplash.com/photo-1552674605-db6ffd4facb5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
             background-size: cover;
             background-position: center;
             display: flex;
@@ -48,7 +48,7 @@
         button {
             width: 100%;
             padding: 10px;
-            background-color: #007BFF; /* Color azul deportivo */
+            background-color: #007BFF;
             border: none;
             border-radius: 4px;
             color: #fff;
@@ -56,10 +56,15 @@
             cursor: pointer;
         }
         button:hover {
-            background-color: #0056b3; /* Color azul más oscuro al pasar el ratón */
+            background-color: #0056b3;
         }
         .error {
             color: red;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .success {
+            color: green;
             text-align: center;
             margin-bottom: 10px;
         }
@@ -78,23 +83,28 @@
     <img th:src="@{/images/logos/logo.png}" alt="SportCat Logo" class="logo">
     <h1>Iniciar sesión en SportCat</h1>
 
-    <!-- Mensajes de error o éxito -->
+    <!-- Mensajes de error -->
     <div th:if="${param.error}" class="error">
-        Correo electrónico o contraseña incorrectos.
+        <span th:if="${param.error == 'wrongPassword'}">Contraseña incorrecta. Inténtalo de nuevo.</span>
+        <span th:if="${param.error == 'userNotFound'}">Usuario no encontrado. Verifica tu nombre de usuario.</span>
     </div>
-    <div th:if="${param.logout}" class="error">
+
+    <!-- Mensajes de éxito -->
+    <div th:if="${param.logoutSuccess}" class="success">
         Has cerrado sesión correctamente.
     </div>
 
-    <!-- Formulario de inicio de sesión -->
+    <div th:if="${param.registerSuccess}" class="success">
+        Registro exitoso. Ahora puedes iniciar sesión.
+    </div>
+
     <form th:action="@{/login}" method="post">
-        <label for="email">Correo electrónico:</label>
-        <input type="email" id="email" name="username" placeholder="Correo electrónico" required>
+        <label for="username">Correo electrónico:</label>
+        <input type="email" id="username" name="username" placeholder="Correo electrónico" required>
 
         <label for="password">Contraseña:</label>
         <input type="password" id="password" name="password" placeholder="Contraseña" required>
 
-        <!-- Recordar sesión -->
         <div class="form-check">
             <input type="checkbox" class="form-check-input" name="remember-me" id="rememberMe">
             <label class="form-check-label" for="rememberMe">Recordar sesión</label>
@@ -102,6 +112,7 @@
 
         <button type="submit">Iniciar sesión</button>
     </form>
+
 </div>
 </body>
 </html>
