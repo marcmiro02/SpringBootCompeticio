@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -162,5 +163,19 @@ public class CompeticioController {
         return "competicio/competicio"; // La ruta de la vista Thymeleaf
     }
 
-
+    @GetMapping("/")
+    public String homepage(Model model) {
+        List<Competicio> activeCompeticions = competicioService.findActiveCompeticions();
+        if (activeCompeticions == null || activeCompeticions.isEmpty()) {
+            model.addAttribute("competicions", Collections.emptyList());
+        } else {
+            for (Competicio competicio : activeCompeticions) {
+                if (competicio.getFotoPortada() != null) {
+                    competicio.setFotoPortada(Base64.getEncoder().encode(competicio.getFotoPortada()));
+                }
+            }
+            model.addAttribute("competicions", activeCompeticions);
+        }
+        return "homepage";
+    }
 }
