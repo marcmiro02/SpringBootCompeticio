@@ -2,8 +2,6 @@ package org.example.springbootstripe.model;
 
 import jakarta.persistence.*;
 
-import java.util.Collection;
-
 @Entity
 @Table(name = "usuaris")
 public class Usuari {
@@ -11,8 +9,6 @@ public class Usuari {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-
-
 
     @Column(name = "nom", nullable = false)
     private String nom;
@@ -29,8 +25,9 @@ public class Usuari {
     @Column(name = "contrasenya", nullable = false)
     private String contrasenya;
 
-
-     @Column(name = "id_rol", nullable = false) private Long idRol;
+    // En la base de datos almacenas solo la ID, así que el tipo puede ser int o long
+    @Column(name = "id_rol", nullable = false)
+    private int idRol;  // o Long, dependiendo de la base de datos
 
     public Long getId() {
         return id;
@@ -80,13 +77,11 @@ public class Usuari {
         this.contrasenya = contrasenya;
     }
 
-    public Long getIdRol() {
+    public int getIdRol() {
         return idRol;
     }
 
-
-    public void setIdRol(Long idRol) {
+    public void setIdRol(int idRol) {
         this.idRol = idRol;
     }
-
 }
