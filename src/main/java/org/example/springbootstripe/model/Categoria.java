@@ -1,4 +1,9 @@
 package org.example.springbootstripe.model;
 
-public class Categoria {
+public enum Categoria {
+    INDIVIDUAL_MASCULÍ, INDIVIDUAL_FEMENÍ, INDIVIDUAL_MIXT,
+    EQUIP_MASCULÍ, EQUIP_FEMENÍ, EQUIP_MIXT,
+    DOBLES_MASCULÍ, DOBLES_FEMENÍ, DOBLES_MIXT,
+    RELLEUS_MASCULÍ, RELLEUS_FEMENÍ, RELLEUS_MIXT,
+    EXTREM_INDIVIDUAL, EXTREM_EQUIP
 }

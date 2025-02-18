@@ -20,87 +20,28 @@ public class StripeService {
     public StripeService() {
     }
 
-    public String createCustomer(String email, String token) {
-        String id = null;
-        try {
-            Stripe.apiKey = API_SECRET_KEY;
-            Map<String, Object> customerParams = new HashMap<>();
-            // add customer unique id here to track them in your web application
-            customerParams.put("description", "Customer for " + email);
-            customerParams.put("email", email);
-
-            customerParams.put("source", token); // ^ obtained with Stripe.js
-            //create a new customer
-            Customer customer = Customer.create(customerParams);
-            id = customer.getId();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return id;
-    }
-
-    public String createSubscription(String customerId, String plan, String coupon) {
-        String id = null;
-        try {
-            Stripe.apiKey = API_SECRET_KEY;
-            Map<String, Object> item = new HashMap<>();
-            item.put("plan", plan);
-
-            Map<String, Object> items = new HashMap<>();
-            items.put("0", item);
-
-            Map<String, Object> params = new HashMap<>();
-            params.put("customer", customerId);
-            params.put("items", items);
-
-            //add coupon if available
-            if (!coupon.isEmpty()) {
-                params.put("coupon", coupon);
-            }
-
-            Subscription sub = Subscription.create(params);
-            id = sub.getId();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return id;
-    }
-
-    public boolean cancelSubscription(String subscriptionId) {
-        boolean status;
-        try {
-            Stripe.apiKey = API_SECRET_KEY;
-            Subscription sub = Subscription.retrieve(subscriptionId);
-            sub.cancel(null);
-            status = true;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            status = false;
-        }
-        return status;
-    }
-
-    public Coupon retrieveCoupon(String code) {
-        try {
-            Stripe.apiKey = API_SECRET_KEY;
-            return Coupon.retrieve(code);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return null;
-    }
-
-    public String createCharge(String email, String token, int amount) {
+    public String createCharge(String email, String token, double amount, String competition, String dataInici, String dataFi) {
         String id = null;
         try {
             Stripe.apiKey = API_SECRET_KEY;
             Map<String, Object> chargeParams = new HashMap<>();
-            chargeParams.put("amount", amount);
-            chargeParams.put("currency", "usd");
-            chargeParams.put("description", "Charge for " + email);
-            chargeParams.put("source", token); // ^ obtained with Stripe.js
 
-            //create a charge
+            // Convertir la cantidad a centavos y redondearla a un número entero
+            int amountInCents = (int) (amount * 100);  // Multiplicar por 100 para obtener euros
+
+            chargeParams.put("amount", amountInCents);
+            chargeParams.put("currency", "eur");
+            chargeParams.put("description", "Charge for " + email + " for " + competition + " from " + dataInici + " to " + dataFi);
+            chargeParams.put("source", token);
+            chargeParams.put("receipt_email", email);
+            chargeParams.put("metadata", new HashMap<String, String>() {{
+                put("email", email);
+                put("competition", competition);
+                put("dataInici", dataInici);
+                put("dataFi", dataFi);
+            }});
+
+            // Crear un cargo
             Charge charge = Charge.create(chargeParams);
             id = charge.getId();
         } catch (Exception ex) {

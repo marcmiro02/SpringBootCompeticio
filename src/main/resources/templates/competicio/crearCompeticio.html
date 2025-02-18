@@ -4,23 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear Competición</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             background-color: #f8f9fa;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
         h1 {
             font-size: 2.5rem;
             font-weight: bold;
             color: #343a40;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             text-align: center;
             position: relative;
-            display: inline-block;
         }
+
         h1::after {
             content: '';
             display: block;
@@ -38,24 +40,7 @@
             overflow: hidden;
             background: #ffffff;
             position: relative;
-        }
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, rgba(0, 123, 255, 0.1), rgba(0, 191, 255, 0.1));
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-        }
-        .card:hover::before {
-            opacity: 1;
+            margin-top: 2rem;
         }
 
         .card-body {
@@ -70,13 +55,14 @@
             color: #343a40;
         }
 
-        .form-control {
+        .form-control, .form-select {
             border-radius: 10px;
             border: 1px solid #ced4da;
             padding: 0.75rem 1rem;
             transition: border-color 0.3s, box-shadow 0.3s;
+            width: 100%;
         }
-        .form-control:focus {
+        .form-control:focus, .form-select:focus {
             border-color: #007bff;
             box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
         }
@@ -88,10 +74,11 @@
             font-size: 1rem;
             border-radius: 25px;
             transition: background-color 0.3s, transform 0.3s;
-            display: inline-block;
-            text-align: center;
             width: 100%;
+            color: #fff;
+            cursor: pointer;
         }
+
         .btn-primary:hover {
             background-color: #0056b3;
             transform: translateY(-3px);
@@ -103,17 +90,57 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             padding: 2rem;
+            margin: 0 auto;
+        }
+
+        .form-check-input {
+            margin-top: 0.3rem;
+        }
+
+        .mb-3 {
+            margin-bottom: 1.5rem;
+        }
+
+        #capacidadEquip {
+            display: none;
+        }
+
+        .d-grid {
+            margin-top: 2rem;
+        }
+
+        .card-body h2 {
+            font-size: 1.5rem;
+            margin-top: 1.5rem;
+            color: #343a40;
         }
     </style>
 </head>
-<body class="bg-light">
+<body>
 
 <!-- Navbar -->
-<div th:replace="~{fragments/navbar :: navbar}"></div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow">
+    <div class="container">
+        <a class="navbar-brand" href="/">Active Competitions</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/competicions">Competitions</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/competicions/create">Create Competition</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
-<div class="container mt-5">
+<div class="container">
     <div class="card shadow-sm">
         <div class="card-body">
             <h1 class="text-center mb-4">🏆 Crear Competición</h1>
@@ -136,10 +163,28 @@
 
                 <div class="mb-3">
                     <label for="categoria" class="form-label">Categoría:</label>
-                    <select id="categoria" name="categoria" class="form-select" required>
-                        <option value="individual">Individual</option>
-                        <option value="equips">Equipos</option>
+                    <select id="categoria" name="categoria" class="form-select" required onchange="toggleCapacidadEquip()">
+                        <option value="INDIVIDUAL_MASCULÍ">Individual Masculí</option>
+                        <option value="INDIVIDUAL_FEMENÍ">Individual Femení</option>
+                        <option value="INDIVIDUAL_MIXT">Individual Mixt</option>
+                        <option value="EQUIP_MASCULÍ">Equip Masculí</option>
+                        <option value="EQUIP_FEMENÍ">Equip Femení</option>
+                        <option value="EQUIP_MIXT">Equip Mixt</option>
+                        <option value="DOBLES_MASCULÍ">Dobles Masculí</option>
+                        <option value="DOBLES_FEMENÍ">Dobles Femení</option>
+                        <option value="DOBLES_MIXT">Dobles Mixt</option>
+                        <option value="RELLEUS_MASCULÍ">Relleus Masculí</option>
+                        <option value="RELLEUS_FEMENÍ">Relleus Femení</option>
+                        <option value="RELLEUS_MIXT">Relleus Mixt</option>
+                        <option value="EXTREM_INDIVIDUAL">Extrem Individual</option>
+                        <option value="EXTREM_EQUIP">Extrem Equip</option>
                     </select>
+                </div>
+
+                <!-- Campo para la capacidad del equipo (oculto por defecto) -->
+                <div id="capacidadEquip" class="mb-3">
+                    <label for="capacitat_equip" class="form-label">Capacidad del Equipo:</label>
+                    <input type="number" id="capacitat_equip" name="capacitat_equip" class="form-control">
                 </div>
 
                 <div class="mb-3">
@@ -172,7 +217,7 @@
                 <!-- Selección de provincia -->
                 <div class="mb-3">
                     <label for="provincia" class="form-label">Provincia:</label>
-                    <select id="provincia" name="provincia" class="form-control" onchange="loadCities(this.value)" required>
+                    <select id="provincia" name="provincia" class="form-select" onchange="loadCities(this.value)" required>
                         <option value="">Seleccione una provincia</option>
                     </select>
                 </div>
@@ -180,36 +225,18 @@
                 <!-- Selección de ciudad -->
                 <div class="mb-3">
                     <label for="poblacio" class="form-label">Ciudad:</label>
-                    <select id="poblacio" name="poblacio" class="form-control" required>
+                    <select id="poblacio" name="poblacio" class="form-select" required>
                         <option value="">Seleccione una ciudad</option>
                     </select>
                 </div>
 
-                <!-- Requisitos -->
-                <h2 class="h5 mt-4">Requisitos</h2>
-
-                <div class="form-check mb-3">
-                    <input type="checkbox" id="edadMinCheck" name="edadMinCheck" class="form-check-input" onclick="toggleEdadMinInput()">
-                    <label for="edadMinCheck" class="form-check-label">Edad Mínima</label>
+                <!-- Campo adicional de observaciones -->
+                <div class="mb-3">
+                    <label for="observacions" class="form-label">Observaciones:</label>
+                    <textarea id="observacions" name="observacions" class="form-control" rows="3"></textarea>
                 </div>
 
-                <div id="edadMinInput" class="mb-3" style="display: none;">
-                    <label for="edat_min" class="form-label">Edad Mínima:</label>
-                    <input type="number" id="edat_min" name="edat_min" class="form-control">
-                </div>
-
-                <div class="form-check mb-3">
-                    <input type="checkbox" id="edadMaxCheck" name="edadMaxCheck" class="form-check-input" onclick="toggleEdadMaxInput()">
-                    <label for="edadMaxCheck" class="form-check-label">Edad Máxima</label>
-                </div>
-
-                <div id="edadMaxInput" class="mb-3" style="display: none;">
-                    <label for="edat_max" class="form-label">Edad Máxima:</label>
-                    <input type="number" id="edat_max" name="edat_max" class="form-control">
-                </div>
-
-                <!-- Enviar formulario -->
-                <div class="d-grid">
+                <div class="d-grid gap-2">
                     <button type="submit" class="btn btn-primary">Crear Competición</button>
                 </div>
             </form>
@@ -217,88 +244,19 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Función para mostrar/ocultar el campo de Edad Mínima
-    function toggleEdadMinInput() {
-        var edadMinInput = document.getElementById('edadMinInput');
-        var checkBox = document.getElementById('edadMinCheck');
-        edadMinInput.style.display = checkBox.checked ? 'block' : 'none';
+    // Muestra u oculta el campo de capacidad del equipo
+    function toggleCapacidadEquip() {
+        const categoria = document.getElementById("categoria").value;
+        const capacidadEquip = document.getElementById("capacidadEquip");
+        if (categoria.includes("EQUIP") || categoria.includes("DOBLES") || categoria.includes("RELLEUS")) {
+            capacidadEquip.style.display = "block";
+        } else {
+            capacidadEquip.style.display = "none";
+        }
     }
-
-    // Función para mostrar/ocultar el campo de Edad Máxima
-    function toggleEdadMaxInput() {
-        var edadMaxInput = document.getElementById('edadMaxInput');
-        var checkBox = document.getElementById('edadMaxCheck');
-        edadMaxInput.style.display = checkBox.checked ? 'block' : 'none';
-    }
-
-    // Función para cargar provincias
-    function loadProvinces() {
-        fetch('/api/provincias') // Asegúrate de que la URL sea correcta
-            .then(response => response.json())
-            .then(data => {
-                const provinciaSelect = document.getElementById('provincia');
-                provinciaSelect.innerHTML = '<option value="">Seleccione una provincia</option>';
-                data.forEach(provincia => {
-                    const option = document.createElement('option');
-                    option.value = provincia.id; // Usamos el ID de la provincia
-                    option.textContent = provincia.nombre; // Mostramos el nombre de la provincia
-                    provinciaSelect.appendChild(option);
-                });
-            })
-            .catch(error => {
-                console.error('Error al cargar provincias:', error);
-            });
-    }
-
-    // Función para cargar ciudades por el ID de la provincia
-    function loadCities(provinciaId) {
-        if (!provinciaId) return; // Si no hay provincia seleccionada, no hacemos nada
-
-        fetch(`/api/ciudades?provinciaId=${provinciaId}`) // Enviar el ID de la provincia
-            .then(response => response.json())
-            .then(data => {
-                const ciudadesSelect = document.getElementById('poblacio');
-                ciudadesSelect.innerHTML = '<option value="">Seleccione una ciudad</option>';
-                data.forEach(ciudad => {
-                    const option = document.createElement('option');
-                    option.value = ciudad.id; // Enviar el ID de la ciudad
-                    option.textContent = ciudad.nombre; // Mostrar el nombre de la ciudad
-                    ciudadesSelect.appendChild(option);
-                });
-            })
-            .catch(error => {
-                console.error('Error al cargar ciudades:', error);
-            });
-    }
-
-    document.querySelector('form').addEventListener('submit', function (event) {
-        var provinciaSelect = document.getElementById('provincia');
-        var poblacioSelect = document.getElementById('poblacio');
-
-        // Obtener el texto (nombre) de la provincia y ciudad seleccionadas
-        var provinciaNombre = provinciaSelect.options[provinciaSelect.selectedIndex].text;
-        var ciudadNombre = poblacioSelect.options[poblacioSelect.selectedIndex].text;
-
-        // Establecer los valores de los campos hidden para enviar los nombres en lugar de los IDs
-        var provinciaHidden = document.createElement('input');
-        provinciaHidden.type = 'hidden';
-        provinciaHidden.name = 'provincia_nombre'; // Campo para el nombre de la provincia
-        provinciaHidden.value = provinciaNombre;
-        this.appendChild(provinciaHidden);
-
-        var ciudadHidden = document.createElement('input');
-        ciudadHidden.type = 'hidden';
-        ciudadHidden.name = 'ciudad_nombre'; // Campo para el nombre de la ciudad
-        ciudadHidden.value = ciudadNombre;
-        this.appendChild(ciudadHidden);
-    });
-
-    // Cargar provincias cuando la página se carga
-    document.addEventListener('DOMContentLoaded', function () {
-        loadProvinces();
-    });
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

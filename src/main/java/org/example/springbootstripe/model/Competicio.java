@@ -20,8 +20,12 @@ public class Competicio {
     @Column(name = "capacitat", nullable = false)
     private Integer capacitat;
 
+    @Column(name = "capacitat_equip")
+    private Integer capacitatEquip;  // Campo opcional para equipos
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "categoria", nullable = false)
-    private String categoria;
+    private Categoria categoria;
 
     @Column(name = "data_inici", nullable = false)
     private LocalDate dataInici;
@@ -84,11 +88,19 @@ public class Competicio {
         this.capacitat = capacitat;
     }
 
-    public String getCategoria() {
+    public Integer getCapacitatEquip() {
+        return capacitatEquip;
+    }
+
+    public void setCapacitatEquip(Integer capacitatEquip) {
+        this.capacitatEquip = capacitatEquip;
+    }
+
+    public Categoria getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(String categoria) {
+    public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }
 

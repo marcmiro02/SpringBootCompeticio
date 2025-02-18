@@ -17,9 +17,29 @@
 
         /* Menú desplegable de perfil, ajustado a la derecha */
         .navbar-nav.ms-auto .nav-item {
-
             margin-left: 40px;
             margin-right: 25px;
+        }
+
+        /* Aseguramos que la navbar tenga un fondo oscuro, z-index alto para estar por encima de otros elementos */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1050; /* Aseguramos que la navbar se mantenga encima de otros elementos */
+        }
+
+        /* Navbar expandida */
+        .navbar-collapse {
+            justify-content: flex-end; /* Alinea las opciones de la navbar a la derecha */
+        }
+
+        /* Menú desplegable */
+        .navbar-nav .nav-item {
+            margin-right: 20px; /* Añadir un pequeño espacio entre los elementos */
+        }
+
+        .navbar-toggler-icon {
+            background-color: #fff; /* Cambia el color del icono del toggle */
         }
     </style>
 

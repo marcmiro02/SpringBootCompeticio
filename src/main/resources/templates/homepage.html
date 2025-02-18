@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Pàgina Principal</title>
+    <title>Homepage</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -11,52 +11,27 @@
             background-color: #f8f9fa;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+
         h1 {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: bold;
             color: #343a40;
             margin-bottom: 2rem;
             text-align: center;
             position: relative;
+            display: inline-block;
         }
         h1::after {
             content: '';
             display: block;
-            width: 80px;
+            width: 60%;
             height: 4px;
             background: linear-gradient(90deg, #007bff, #00bfff);
             margin: 10px auto 0;
             border-radius: 2px;
         }
-        .hero-section {
-            background: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80') no-repeat center center/cover;
-            color: white;
-            padding: 100px 20px;
-            text-align: center;
-            display: flex; /* Flexbox para centrar contenido */
-            flex-direction: column;
-            justify-content: center; /* Centra verticalmente */
-            align-items: center; /* Centra horizontalmente */
-        }
-        .hero-section h1 {
-            font-size: 4rem;
-            margin-bottom: 20px;
-        }
-        .hero-section p {
-            font-size: 1.2rem;
-            max-width: 600px;
-            margin: 0 auto 30px;
-        }
-        .hero-section .btn-primary {
-            padding: 0.75rem 2rem; /* Reduce el tamaño del botón */
-            font-size: 1rem;
-            border-radius: 25px;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-        .hero-section .btn-primary:hover {
-            background-color: #0056b3;
-            transform: translateY(-3px);
-        }
+
+        /* Card Styles */
         .card {
             transition: transform 0.3s, box-shadow 0.3s;
             border: none;
@@ -65,9 +40,23 @@
             background: #ffffff;
             position: relative;
         }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0, 123, 255, 0.1), rgba(0, 191, 255, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
         .card:hover {
             transform: translateY(-10px);
             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+        .card:hover::before {
+            opacity: 1;
         }
         .card-img-top {
             height: 200px;
@@ -78,6 +67,9 @@
             transform: scale(1.1);
         }
         .card-body {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.9);
             padding: 1.5rem;
         }
         .card-title {
@@ -100,16 +92,13 @@
             transition: background-color 0.3s, transform 0.3s;
             display: inline-block;
             text-align: center;
-            width: 20%;
+            width: 100%;
         }
         .btn-primary:hover {
             background-color: #0056b3;
             transform: translateY(-3px);
         }
-        .fa-calendar-days {
-            color: #007bff;
-            margin-right: 8px;
-        }
+
         .container {
             max-width: 1200px;
             padding: 2rem;
@@ -128,47 +117,41 @@
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
 <!-- Hero Section -->
-<section class="hero-section">
-    <h1>Benvingut a les Competicions!</h1>
-    <p>Troba les millors competicions actives i inscrueix-te avui mateix.</p>
-    <a href="/competicions/create" class="btn btn-primary">Crea la teva Competició</a>
+<section class="hero-section text-center" style="background: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?fit=crop&w=1974&h=1000') no-repeat center center/cover; color: white; padding: 80px 20px;">
+    <h1>Welcome to Active Competitions</h1>
+    <p>Join and participate in the best active competitions!</p>
+    <a href="/competicions/create" class="btn btn-primary">Create Your Competition</a>
 </section>
 
-<!-- Contenido Principal -->
-<div class="container mt-5">
-    <h1 class="text-center mb-5">🏆 Competicions Actives</h1>
+<div th:if="${#lists.isEmpty(competicions)}">
+    <p>No competitions found.</p>
+</div>
 
-    <!-- Mensaje si no hay competicions -->
-    <div th:if="${#lists.isEmpty(competicions)}" class="alert alert-info text-center">
-        No hi ha competicions actives actualment.
-    </div>
-
-    <!-- Lista de competicions -->
-    <div th:unless="${#lists.isEmpty(competicions)}" class="row">
-        <div th:each="competicio : ${competicions}" class="col-sm-6 col-md-4 col-lg-3 mb-4">
-            <div class="card shadow-sm">
-                <!-- Imagen -->
-                <img th:src="${competicio.fotoPortada != null ? 'data:image/jpeg;base64,' + ${Base64Utils.encodeToString(competicio.fotoPortada)} : '/images/default.jpg'}"
-                     class="card-img-top img-fluid"
-                     th:alt="${'Image of ' + competicio.nom}">
-
-                <!-- Contenido del card -->
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${competicio.nom}">Nom de la Competició</h5>
-                    <p class="card-text">
-                        <strong>Categoria:</strong> <span th:text="${competicio.categoria}">Categoria</span><br>
-                        <i class="fa-solid fa-calendar-days"></i>
-                        <span th:text="${#temporals.format(competicio.dataInici, 'dd/MM/yyyy')}">Data Inici</span> -
-                        <span th:text="${#temporals.format(competicio.dataFi, 'dd/MM/yyyy')}">Data Fi</span><br>
-                        <strong>Preu:</strong> <span th:text="${#numbers.formatDecimal(competicio.preu, 2, 'POINT')} + ' €'">Preu</span><br>
-                        <strong>Lloc:</strong> <span th:text="${competicio.poblacio + ', ' + competicio.provincia}">Lloc</span>
-                    </p>
-                    <a th:href="@{/competicions/{id}(id=${competicio.id})}" class="btn btn-primary">Veure Detalls</a>
+<div th:if="${!#lists.isEmpty(competicions)}">
+    <div class="container mt-5">
+        <h1 class="text-center mb-5">🏆 All Competitions</h1>
+        <div class="row">
+            <div th:each="competicio : ${competicions}" class="col-sm-6 col-md-4 col-lg-3 mb-4">
+                <div class="card shadow-sm">
+                    <img th:src="${competicio.fotoPortada != null ? competicio.fotoPortada : '/images/default.jpg'}"
+                         class="card-img-top img-fluid"
+                         th:alt="${'Image of ' + competicio.nom}">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${competicio.nom}">Competition Name</h5>
+                        <p class="card-text">
+                            <strong>Category:</strong> <span th:text="${competicio.categoria}">Category</span><br>
+                            <i class="fa-solid fa-calendar-days"></i>
+                            <span th:text="${competicio.dataInici}">Start Date</span> -
+                            <span th:text="${competicio.dataFi}">End Date</span>
+                        </p>
+                        <a th:href="@{/competicions/{id}(id=${competicio.id})}" class="btn btn-primary">View Details</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
