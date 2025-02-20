@@ -62,7 +62,7 @@ public class AuthController {
     public String loginUser(@RequestParam String username,
                             @RequestParam String password,
                             HttpServletRequest request) {
-        Usuari usuari = usuariRepository.findByEmail(username).orElse(null);
+        Usuari usuari = usuariRepository.findByEmail(username);
 
         if (usuari != null && password.equals(usuari.getContrasenya())) {
             HttpSession session = request.getSession();
@@ -74,25 +74,7 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/somePage")
-    public String somePage(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            return "redirect:/login?error=sessionExpired";
-        }
 
-        Long userId = (Long) session.getAttribute("userId");
-        String username = (String) session.getAttribute("username");
-
-        if (userId == null || username == null) {
-            return "redirect:/login?error=sessionExpired";
-        }
-
-        model.addAttribute("userId", userId);
-        model.addAttribute("username", username);
-
-        return "somePage";
-    }
 
     @GetMapping("/logout")
     public String logout(HttpServletRequest request) {
