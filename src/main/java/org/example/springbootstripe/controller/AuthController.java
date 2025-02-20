@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -17,6 +19,7 @@ public class AuthController {
 
     @Autowired
     private UsuariRepository usuariRepository;
+
     @Autowired
     private RolRepository rolRepository;
 
@@ -56,10 +59,13 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String loginUser(@RequestParam String username, @RequestParam String password, HttpSession session) {
+    public String loginUser(@RequestParam String username,
+                            @RequestParam String password,
+                            HttpServletRequest request) {
         Usuari usuari = usuariRepository.findByEmail(username).orElse(null);
 
         if (usuari != null && password.equals(usuari.getContrasenya())) {
+            HttpSession session = request.getSession();
             session.setAttribute("userId", usuari.getId());
             session.setAttribute("username", usuari.getNomUsuari());
             return "redirect:/homepage";
@@ -69,7 +75,12 @@ public class AuthController {
     }
 
     @GetMapping("/somePage")
-    public String somePage(HttpSession session, Model model) {
+    public String somePage(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return "redirect:/login?error=sessionExpired";
+        }
+
         Long userId = (Long) session.getAttribute("userId");
         String username = (String) session.getAttribute("username");
 
@@ -84,8 +95,11 @@ public class AuthController {
     }
 
     @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
+    public String logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
         return "redirect:/login";
     }
 }
