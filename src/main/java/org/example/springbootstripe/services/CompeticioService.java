@@ -16,8 +16,6 @@ public class CompeticioService {
     @Autowired
     private CompeticioRepository competicioRepository;
 
-
-
     public Competicio saveCompeticio(Competicio competicio) {
         return competicioRepository.save(competicio);
     }

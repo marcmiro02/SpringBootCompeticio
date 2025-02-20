@@ -147,11 +147,10 @@
 
                 <p class="card-text" th:text="${competicio.descripcio}"></p>
 
-                <!-- Botó d'inscripció, només es mostra si l'usuari està loguejat -->
-                <button type="button" class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#inscripcioModal"
-                        th:if="${#authentication.principal != null}">
-                    📌 Inscriure'm
-                </button>
+                <!-- Botón de inscripción ahora redirige a Stripe -->
+                <a th:href="@{/checkout/{id}(id=${competicio.id})}" class="btn btn-success mt-3">
+                    📌 Inscribirme
+                </a>
 
                 <a href="/competicions/all" class="btn btn-primary">Volver</a>
             </div>
@@ -159,43 +158,6 @@
     </div>
 </div>
 
-<!-- Modal d'inscripció -->
-<div class="modal fade" id="inscripcioModal" tabindex="-1" aria-labelledby="inscripcioModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="inscripcioModalLabel">Inscripció a la competició</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Vols inscriure't a <strong th:text="${competicio.nom}"></strong>?</p>
-
-                <!-- Comprovació si l'usuari està loguejat -->
-                <div th:if="${#authentication.principal != null}">
-                    <!-- Opcions d'inscripció per a usuaris loguejats -->
-                    <div>
-                        <input type="radio" id="inscriureMi" name="inscripcio" value="mi" checked>
-                        <label for="inscriureMi">Inscriure'm a mi</label>
-                    </div>
-                    <div>
-                        <input type="radio" id="inscriureAltra" name="inscripcio" value="altra">
-                        <label for="inscriureAltra">Inscriure a una altra persona</label>
-                    </div>
-
-                    <!-- Nom de l'altra persona -->
-                    <div id="nomAltraPersona" class="mb-3" style="display: none;">
-                        <label for="nomAltra" class="form-label">Nom de l'altra persona</label>
-                        <input type="text" class="form-control" id="nomAltra" name="nomAltra">
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel·lar</button>
-                <button type="button" class="btn btn-primary" id="submitInscripcio">Inscriure'm</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {

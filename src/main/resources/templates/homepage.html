@@ -2,31 +2,157 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Homepage</title>
-    <link rel="stylesheet" href="/css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #343a40;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+        }
+        h1::after {
+            content: '';
+            display: block;
+            width: 60%;
+            height: 4px;
+            background: linear-gradient(90deg, #007bff, #00bfff);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        /* Card Styles */
+        .card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            background: #ffffff;
+            position: relative;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0, 123, 255, 0.1), rgba(0, 191, 255, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+        .card:hover::before {
+            opacity: 1;
+        }
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        .card:hover .card-img-top {
+            transform: scale(1.1);
+        }
+        .card-body {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1.5rem;
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #343a40;
+            margin-bottom: 1rem;
+        }
+        .card-text {
+            font-size: 0.95rem;
+            color: #6c757d;
+            margin-bottom: 1.5rem;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 25px;
+            transition: background-color 0.3s, transform 0.3s;
+            display: inline-block;
+            text-align: center;
+            width: 100%;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transform: translateY(-3px);
+        }
+
+        .container {
+            max-width: 1200px;
+            padding: 2rem;
+        }
+        .row {
+            margin: -15px;
+        }
+        .col-sm-6, .col-md-4, .col-lg-3 {
+            padding: 15px;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-light">
+
+<!-- Navbar -->
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
+<!-- Hero Section -->
+<section class="hero-section text-center" style="background: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?fit=crop&w=1974&h=1000') no-repeat center center/cover; color: white; padding: 80px 20px;">
+    <h1>Welcome to Active Competitions</h1>
+    <p>Join and participate in the best active competitions!</p>
+    <a href="/competicions/create" class="btn btn-primary">Create Your Competition</a>
+</section>
+
+<div th:if="${#lists.isEmpty(competicions)}">
+    <p>No competitions found.</p>
+</div>
+
+<div th:if="${!#lists.isEmpty(competicions)}">
+    <div class="container mt-5">
+        <h1 class="text-center mb-5">🏆 All Competitions</h1>
+        <div class="row">
+            <div th:each="competicio : ${competicions}" class="col-sm-6 col-md-4 col-lg-3 mb-4">
+                <div class="card shadow-sm">
+                    <img th:src="${competicio.fotoPortada != null ? competicio.fotoPortada : '/images/default.jpg'}"
+                         class="card-img-top img-fluid"
+                         th:alt="${'Image of ' + competicio.nom}">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${competicio.nom}">Competition Name</h5>
+                        <p class="card-text">
+                            <strong>Category:</strong> <span th:text="${competicio.categoria}">Category</span><br>
+                            <i class="fa-solid fa-calendar-days"></i>
+                            <span th:text="${competicio.dataInici}">Start Date</span> -
+                            <span th:text="${competicio.dataFi}">End Date</span>
+                        </p>
+                        <a th:href="@{/competicions/{id}(id=${competicio.id})}" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
-
-    <script>
-        function toggleDropdown() {
-            document.getElementById('dropdown').classList.toggle('show');
-        }
-        window.onclick = function(event) {
-            if (!event.target.matches('.profile-icon')) {
-                var dropdowns = document.getElementsByClassName('dropdown-content');
-                for (var i = 0; i < dropdowns.length; i++) {
-                    var openDropdown = dropdowns[i];
-                    if (openDropdown.classList.contains('show')) {
-                        openDropdown.classList.remove('show');
-                    }
-                }
-            }
-        }
-    </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-<!--    <a class="btn btn-success" th:href="@{/charge}">Create One-Time Charge</a>-->
