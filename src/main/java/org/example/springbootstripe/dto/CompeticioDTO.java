@@ -13,6 +13,7 @@ public class CompeticioDTO {
     private String descripcio;
     private Integer capacitat;
     private Double preu;
+    private String tipus;
 
     // Getters y Setters
     public String getNom() { return nom; }
@@ -49,6 +50,9 @@ public class CompeticioDTO {
 
     public Double getPreu() { return preu; }
     public void setPreu(Double preu) { this.preu = preu; }
+
+    public String getTipus() { return tipus; }
+    public void setTipus(String tipus) { this.tipus = tipus; }
 
 
 }

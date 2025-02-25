@@ -78,7 +78,8 @@ public class CompeticioController {
             @RequestParam("preu") Double preu,
             @RequestParam("ubicacio") String ubicacio,
             @RequestParam("provincia") String provinciaNombre, // Recibe el nombre de la provincia
-            @RequestParam("poblacio") String ciudadNombre // Recibe el nombre de la ciudad
+            @RequestParam("poblacio") String ciudadNombre, // Recibe el nombre de la ciudad
+            @RequestParam("capacitat_equip") Integer capacitatEquip
     ) {
         Competicio competicio = new Competicio();
         competicio.setNom(name);
@@ -92,6 +93,7 @@ public class CompeticioController {
         competicio.setPoblacio(ciudadNombre);  // Guardamos el nombre de la ciudad
         competicio.setProvincia(provinciaNombre);  // Guardamos el nombre de la provincia
 
+
         if (edatMin != null) {
             competicio.setEdatMin(edatMin);
         }
@@ -99,6 +101,12 @@ public class CompeticioController {
         if (edatMax != null) {
             competicio.setEdatMax(edatMax);
         }
+        if (capacitatEquip != null) {
+            competicio.setCapacitatEquip(capacitatEquip);
+        }else{
+            competicio.setCapacitatEquip(1);
+        }
+
 
         if (!fotoPortada.isEmpty()) {
             try {
@@ -155,6 +163,7 @@ public class CompeticioController {
         competicioDTO.setUbicacio(competicio.getUbicacio());
         competicioDTO.setPoblacio(competicio.getPoblacio());
         competicioDTO.setProvincia(competicio.getProvincia());
+
 
         if (competicio.getFotoPortada() != null) {
             String base64Image = Base64.getEncoder().encodeToString(competicio.getFotoPortada());

@@ -13,6 +13,9 @@ public class Equip {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "id_equip")
+    private Long idEquip;
+
     @Column(name = "id_usuari", nullable = false)
     private Long idUsuari;
 
@@ -38,6 +41,13 @@ public class Equip {
 
     public void setIdUsuari(Long idUsuari) {
         this.idUsuari = idUsuari;
+    }
+
+    public Long getIdEquip() {
+        return idEquip;
+    }
+    public void setIdEquip(Long idEquip) {
+        this.idEquip = idEquip;
     }
 }
 

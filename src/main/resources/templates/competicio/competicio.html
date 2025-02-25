@@ -112,6 +112,11 @@
             max-width: 1200px;
             padding: 2rem;
         }
+
+        /* Ocultar el formulario de equipo o individual al inicio */
+        .inscripcion-grupal, .inscripcion-individual {
+            display: none;
+        }
     </style>
 </head>
 <body class="bg-light">
@@ -127,7 +132,7 @@
             <div class="card shadow-sm">
                 <img th:src="${competicio.fotoPortada != null ? competicio.fotoPortada : '/images/default.jpg'}"
                      class="card-img-top img-fluid"
-                     th:alt="${'Image of ' + competicio.nom}">
+                     th:alt="${'Image of ' + competicio.nom}"/>
             </div>
             <div class="card-body">
                 <h2 class="card-title" th:text="${competicio.nom}">Nombre de la Competición</h2>
@@ -147,9 +152,12 @@
 
                 <p class="card-text" th:text="${competicio.descripcio}"></p>
 
-                <!-- Botón de inscripción ahora redirige a Stripe -->
-                <a th:href="@{/checkout/{id}(id=${competicio.id})}" class="btn btn-success mt-3">
+                <!-- Botón de inscripción con verificación de sesión -->
+                <a href="#" th:if="${session.username != null}" class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#inscriptionModal">
                     📌 Inscribirme
+                </a>
+                <a href="/login" th:if="${session.username == null}" class="btn btn-success mt-3">
+                    📌 Inicia sesión para inscribirte
                 </a>
 
                 <a href="/competicions/all" class="btn btn-primary">Volver</a>
@@ -158,25 +166,108 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="inscriptionModal" tabindex="-1" aria-labelledby="inscriptionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="inscriptionModalLabel">Inscripción en la Competición</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5 th:text="${competicio.nom}">Nombre de la Competición</h5>
+
+                <form id="inscriptionForm">
+                    <!-- Formulario de inscripción individual -->
+                    <div class="inscripcion-individual">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="email" placeholder="Correo electrónico" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Tipo de Inscripción</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="inscripcio" id="individual" value="individual" checked>
+                                <label class="form-check-label" for="individual">Individual</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Formulario de inscripción grupal -->
+                    <div class="inscripcion-grupal">
+                        <div class="mb-3">
+                            <label class="form-label">Tipo de Inscripción</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="inscripcio" id="grupal" value="grupal">
+                                <label class="form-check-label" for="grupal">En grupo</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="nombreEquipo" class="form-label">Nombre del equipo</label>
+                            <input type="text" class="form-control" id="nombreEquipo" placeholder="Nombre del equipo">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="participantes" class="form-label">Participantes</label>
+                            <input type="text" class="form-control" id="participantes" placeholder="Nombres de los participantes">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="capitan" class="form-label">Capitán</label>
+                            <input type="text" class="form-control" id="capitan" placeholder="Nombre del capitán">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="capacitatEquip" class="form-label">Capacidad del equipo</label>
+                            <input type="number" class="form-control" id="capacitatEquip" placeholder="Número de personas en el equipo">
+                        </div>
+                    </div>
+
+                    <!-- Botón para inscribirse -->
+                    <button type="submit" class="btn btn-primary">Inscribirse</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const radioButtons = document.querySelectorAll('input[name="inscripcio"]');
-        const nomAltraPersonaField = document.getElementById('nomAltraPersona');
+        const inscripcionIndividual = document.querySelector('.inscripcion-individual');
+        const inscripcionGrupal = document.querySelector('.inscripcion-grupal');
 
+        // Detectamos si la competición es de tipo grupal o individual desde el backend (Thymeleaf)
+        const competicioTipus = /*[[${competicio.tipus}]]*/ "individual";  // Esto se puede pasar desde el backend, o usando Thymeleaf
+
+        // Si es tipo grupal, mostramos el formulario grupal
+        if (competicioTipus === 'grupal') {
+            inscripcionGrupal.style.display = 'block';
+            inscripcionIndividual.style.display = 'none';
+        } else {
+            // Si es tipo individual, mostramos el formulario individual
+            inscripcionGrupal.style.display = 'none';
+            inscripcionIndividual.style.display = 'block';
+        }
+
+        // Evento para cambiar la visualización del formulario dependiendo del tipo de inscripción
         radioButtons.forEach(function (radioButton) {
             radioButton.addEventListener('change', function () {
-                if (document.getElementById('inscriureAltra').checked) {
-                    nomAltraPersonaField.style.display = 'block'; // Mostra el camp per a nom d'altra persona
+                if (document.getElementById('grupal').checked) {
+                    inscripcionGrupal.style.display = 'block';
+                    inscripcionIndividual.style.display = 'none';
                 } else {
-                    nomAltraPersonaField.style.display = 'none'; // Amaga el camp
+                    inscripcionGrupal.style.display = 'none';
+                    inscripcionIndividual.style.display = 'block';
                 }
             });
         });
     });
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

@@ -1,6 +1,5 @@
 package org.example.springbootstripe.controller;
 
-import org.example.springbootstripe.model.Rol;
 import org.example.springbootstripe.model.Usuari;
 import org.example.springbootstripe.repository.RolRepository;
 import org.example.springbootstripe.repository.UsuariRepository;
@@ -11,8 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class AuthController {
@@ -68,20 +67,9 @@ public class AuthController {
             HttpSession session = request.getSession();
             session.setAttribute("userId", usuari.getId());
             session.setAttribute("username", usuari.getNomUsuari());
-            return "redirect:/homepage";
+            return "redirect:/";
         } else {
             return "redirect:/login?error=invalidCredentials";
         }
-    }
-
-
-
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
-        return "redirect:/login";
     }
 }

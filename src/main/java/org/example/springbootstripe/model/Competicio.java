@@ -6,6 +6,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "competicions")
 public class Competicio {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -54,6 +55,11 @@ public class Competicio {
 
     @Column(name = "provincia", nullable = false)
     private String provincia;
+
+    // Nueva propiedad tipus
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipus", nullable = false)
+    private Tipus tipus;  // El tipo de inscripción (INDIVIDUAL o EQUIP)
 
     // Getters and Setters
     public Long getId() {
@@ -175,4 +181,13 @@ public class Competicio {
     public void setProvincia(String provincia) {
         this.provincia = provincia;
     }
+
+    public Tipus getTipus() {
+        return tipus;
+    }
+
+    public void setTipus(Tipus tipus) {
+        this.tipus = tipus;
+    }
 }
+
