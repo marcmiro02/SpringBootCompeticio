@@ -2,17 +2,20 @@
     <style>
         /* Estilos para ajustar el logo y el nombre */
         .navbar-brand {
-            margin-left: 40px; /* Añade un margen a la izquierda */
+            margin-left: 40px;
             display: flex;
             align-items: center;
         }
+
         .navbar-brand img {
             height: 40px; /* Ajusta la altura del logo según necesites */
             margin-right: 10px; /* Espacio entre el logo y el texto */
         }
+
         .navbar-brand span {
-            font-size: 2rem; /* Tamaño del texto */
+            font-size: 2rem;
             font-weight: bold;
+            color: #fff;
         }
 
         /* Menú desplegable de perfil, ajustado a la derecha */
@@ -25,7 +28,8 @@
         .navbar {
             position: sticky;
             top: 0;
-            z-index: 1050; /* Aseguramos que la navbar se mantenga encima de otros elementos */
+            z-index: 1050;
+            background-color: #343a40; /* Fondo oscuro */
         }
 
         /* Navbar expandida */
@@ -38,8 +42,38 @@
             margin-right: 20px; /* Añadir un pequeño espacio entre los elementos */
         }
 
-        .navbar-toggler-icon {
-            background-color: #fff; /* Cambia el color del icono del toggle */
+        /* Estilo del botón de login */
+        .navbar .login-btn {
+            background-color: #007bff;
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar .login-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Estilos del ícono de perfil */
+        .profile-icon {
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        /* Menú desplegable */
+        .dropdown-menu {
+            right: 0;
+            left: auto;
+        }
+
+        /* Estilo del texto de bienvenida */
+        .welcome-text {
+            color: #fff;
+            font-size: 1.1rem;
         }
     </style>
 
@@ -58,8 +92,8 @@
 
             <!-- Menú de navegación -->
             <div class="collapse navbar-collapse" id="navbarNav">
-                <!-- Menú de competiciones (sin ms-auto) -->
-                <ul class="navbar-nav ms-20"> <!-- ms-3 añade un margen izquierdo -->
+                <!-- Menú de competiciones -->
+                <ul class="navbar-nav ms-20">
                     <li class="nav-item">
                         <a class="nav-link" href="/competicions/all">
                             <i class="fas fa-list me-1"></i>
@@ -68,18 +102,27 @@
                     </li>
                 </ul>
 
-                <ul class="navbar-nav ms-auto"> <!-- ms-auto para pegarlo a la derecha -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle profile-icon" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i>Benvingut, <span th:text="${session.username}"></span></i> <!-- Aquí mostramos el username -->
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="/perfil">Perfil</a></li>
-                            <li><a class="dropdown-item" href="/logout">Cerrar sesión</a></li>
-                        </ul>
-                    </li>
-                </ul>
+                <!-- Si el usuario NO está logueado -->
+                <div th:if="${session.username == null}" class="ms-auto">
+                    <button class="login-btn" onclick="window.location.href='/login'">Login</button>
+                </div>
 
+                <!-- Si el usuario ESTÁ logueado -->
+                <div th:if="${session.username != null}" class="ms-auto flex items-center">
+                    <span class="welcome-text" th:text="'Benvingut, ' + ${session.username}"></span>
+
+                    <ul class="navbar-nav ms-3">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle profile-icon" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="/perfil">Perfil</a></li>
+                                <li><a class="dropdown-item" href="/logout">Cerrar sesión</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </nav>
