@@ -7,116 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #343a40;
-            margin-bottom: 2rem;
-            text-align: center;
-            position: relative;
-            display: inline-block;
-        }
-        h1::after {
-            content: '';
-            display: block;
-            width: 60%;
-            height: 4px;
-            background: linear-gradient(90deg, #007bff, #00bfff);
-            margin: 10px auto 0;
-            border-radius: 2px;
-        }
-
-        .card {
-            transition: transform 0.3s, box-shadow 0.3s;
-            border: none;
-            border-radius: 15px;
-            overflow: hidden;
-            background: #ffffff;
-            position: relative;
-        }
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, rgba(0, 123, 255, 0.1), rgba(0, 191, 255, 0.1));
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-        }
-        .card:hover::before {
-            opacity: 1;
-        }
-
-        .card-img-top {
-            height: 300px;
-            object-fit: cover;
-            transition: transform 0.3s;
-        }
-        .card:hover .card-img-top {
-            transform: scale(1.1);
-        }
-
-        .card-body {
-            position: relative;
-            z-index: 1;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 2rem;
-        }
-
-        .card-title {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #343a40;
-            margin-bottom: 1.5rem;
-        }
-
-        .card-text {
-            font-size: 1rem;
-            color: #6c757d;
-            margin-bottom: 1.5rem;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            font-size: 1rem;
-            border-radius: 25px;
-            transition: background-color 0.3s, transform 0.3s;
-            display: inline-block;
-            text-align: center;
-            width: 100%;
-        }
-        .btn-primary:hover {
-            background-color: #0056b3;
-            transform: translateY(-3px);
-        }
-
-        .fa-calendar-days {
-            color: #007bff;
-            margin-right: 8px;
-        }
-
-        .container {
-            max-width: 1200px;
-            padding: 2rem;
-        }
-
-        /* Ocultar el formulario de equipo o individual al inicio */
-        .inscripcion-grupal, .inscripcion-individual {
-            display: none;
-        }
+        /* Tus estilos personalizados aquí */
     </style>
 </head>
 <body class="bg-light">
@@ -125,45 +16,40 @@
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
 <div class="container mt-5">
-    <h1 class="text-center mb-5">🏆 <span th:text="${competicio.nom}"></span></h1>
-
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-sm">
-                <img th:src="${competicio.fotoPortada != null ? competicio.fotoPortada : '/images/default.jpg'}"
-                     class="card-img-top img-fluid"
-                     th:alt="${'Image of ' + competicio.nom}"/>
-            </div>
-            <div class="card-body">
-                <h2 class="card-title" th:text="${competicio.nom}">Nombre de la Competición</h2>
-                <p class="card-text">
-                    <i class="fa-solid fa-calendar-days"></i>
-                    <span th:text="${competicio.dataInici}">Fecha de Inicio</span> /
-                    <span th:text="${competicio.dataFi}">Fecha de Fin</span>
-                </p>
-                <p class="card-text">
-                    <i class="fa-solid fa-map-location-dot" style="color: #1fad14;"></i>
-                    <span th:text="${competicio.provincia} + ', ' + ${competicio.poblacio}"></span><br>
-                </p>
-                <p class="card-text">
-                    <i class="fa-solid fa-coins" style="color: #FFD43B;"></i>
-                    <span th:text="${competicio.preu}"></span><br>
-                </p>
-
-                <p class="card-text" th:text="${competicio.descripcio}"></p>
-
-                <!-- Botón de inscripción con verificación de sesión -->
-                <a href="#" th:if="${session.username != null}" class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#inscriptionModal">
-                    📌 Inscribirme
-                </a>
-                <a href="/login" th:if="${session.username == null}" class="btn btn-success mt-3">
-                    📌 Inicia sesión para inscribirte
-                </a>
-
-                <a href="/competicions/all" class="btn btn-primary">Volver</a>
-            </div>
-        </div>
+    <div class="card shadow-sm">
+        <img th:src="${competicio.fotoPortada != null ? competicio.fotoPortada : '/images/default.jpg'}"
+             class="card-img-top img-fluid"
+             th:alt="${'Image of ' + competicio.nom}"/>
     </div>
+    <div class="card-body">
+        <h2 class="card-title" th:text="${competicio.nom}">Nombre de la Competición</h2>
+        <p class="card-text">
+            <span th:text="${competicio.dataInici}">Fecha de Inicio</span> /
+            <span th:text="${competicio.dataFi}">Fecha de Fin</span>
+        </p>
+        <p class="card-text">
+            <i class="fa-solid fa-map-location-dot" style="color: #1fad14;"></i>
+            <span th:text="${competicio.provincia} + ', ' + ${competicio.poblacio}"></span><br>
+        </p>
+        <p class="card-text">
+            <i class="fa-solid fa-coins" style="color: #FFD43B;"></i>
+            <span th:text="${competicio.preu}"></span><br>
+        </p>
+
+        <p class="card-text" th:text="${competicio.descripcio}"></p>
+
+        <!-- Botón de inscripción con verificación de sesión -->
+        <a href="#" th:if="${session.username != null}" class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#inscriptionModal">
+            📌 Inscribirme
+        </a>
+        <a href="/login" th:if="${session.username == null}" class="btn btn-success mt-3">
+            📌 Inicia sesión para inscribirte
+        </a>
+
+        <a href="/competicions/all" class="btn btn-primary">Volver</a>
+    </div>
+</div>
+</div>
 </div>
 
 <!-- Modal -->
@@ -177,55 +63,32 @@
             <div class="modal-body">
                 <h5 th:text="${competicio.nom}">Nombre de la Competición</h5>
 
-                <form id="inscriptionForm">
-                    <!-- Formulario de inscripción individual -->
-                    <div class="inscripcion-individual">
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Correo Electrónico</label>
-                            <input type="email" class="form-control" id="email" placeholder="Correo electrónico" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Tipo de Inscripción</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="inscripcio" id="individual" value="individual" checked>
-                                <label class="form-check-label" for="individual">Individual</label>
-                            </div>
-                        </div>
+                <form id="individualForm" style="display: none;">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Correo Electrónico</label>
+                        <input type="email" class="form-control" id="email" placeholder="Correo electrónico" required>
                     </div>
+                    <button type="submit" class="btn btn-primary">Inscribirse</button>
+                </form>
 
-                    <!-- Formulario de inscripción grupal -->
-                    <div class="inscripcion-grupal">
-                        <div class="mb-3">
-                            <label class="form-label">Tipo de Inscripción</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="inscripcio" id="grupal" value="grupal">
-                                <label class="form-check-label" for="grupal">En grupo</label>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="nombreEquipo" class="form-label">Nombre del equipo</label>
-                            <input type="text" class="form-control" id="nombreEquipo" placeholder="Nombre del equipo">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="participantes" class="form-label">Participantes</label>
-                            <input type="text" class="form-control" id="participantes" placeholder="Nombres de los participantes">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="capitan" class="form-label">Capitán</label>
-                            <input type="text" class="form-control" id="capitan" placeholder="Nombre del capitán">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="capacitatEquip" class="form-label">Capacidad del equipo</label>
-                            <input type="number" class="form-control" id="capacitatEquip" placeholder="Número de personas en el equipo">
-                        </div>
+                <!-- Formulario de inscripción por equipos (oculto por defecto) -->
+                <form id="teamForm" style="display: none;">
+                    <div class="mb-3">
+                        <label for="nombreEquipo" class="form-label">Nombre del equipo</label>
+                        <input type="text" class="form-control" id="nombreEquipo" placeholder="Nombre del equipo" required>
                     </div>
-
-                    <!-- Botón para inscribirse -->
+                    <div class="mb-3">
+                        <label for="participantes" class="form-label">Participantes</label>
+                        <input type="text" class="form-control" id="participantes" placeholder="Nombres de los participantes" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="capitan" class="form-label">Capitán</label>
+                        <input type="text" class="form-control" id="capitan" placeholder="Nombre del capitán" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="capacitatEquip" class="form-label">Capacidad del equipo</label>
+                        <input type="number" class="form-control" id="capacitatEquip" placeholder="Número de personas en el equipo" required>
+                    </div>
                     <button type="submit" class="btn btn-primary">Inscribirse</button>
                 </form>
             </div>
@@ -234,40 +97,28 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const radioButtons = document.querySelectorAll('input[name="inscripcio"]');
-        const inscripcionIndividual = document.querySelector('.inscripcion-individual');
-        const inscripcionGrupal = document.querySelector('.inscripcion-grupal');
+    // Obtener el tipo de competición desde Thymeleaf
+    const competitionType = '[[${competicio.tipus}]]'; // "INDIVIDUAL" o "EQUIP"
+    console.log("Tipo de competición:", competitionType);
 
-        // Detectamos si la competición es de tipo grupal o individual desde el backend (Thymeleaf)
-        const competicioTipus = /*[[${competicio.tipus}]]*/ "individual";  // Esto se puede pasar desde el backend, o usando Thymeleaf
+    // Mostrar el formulario correcto al abrir el modal
+    document.getElementById('inscriptionModal').addEventListener('show.bs.modal', function () {
+        const individualForm = document.getElementById('individualForm');
+        const teamForm = document.getElementById('teamForm');
 
-        // Si es tipo grupal, mostramos el formulario grupal
-        if (competicioTipus === 'grupal') {
-            inscripcionGrupal.style.display = 'block';
-            inscripcionIndividual.style.display = 'none';
+        if (competitionType === "INDIVIDUAL") {
+            console.log("Mostrando formulario individual");
+            individualForm.style.display = "block";
+            teamForm.style.display = "none";
+        } else if (competitionType === "EQUIP") {
+            console.log("Mostrando formulario de equipo");
+            individualForm.style.display = "none";
+            teamForm.style.display = "block";
         } else {
-            // Si es tipo individual, mostramos el formulario individual
-            inscripcionGrupal.style.display = 'none';
-            inscripcionIndividual.style.display = 'block';
+            console.log("Tipo de competición desconocido");
         }
-
-        // Evento para cambiar la visualización del formulario dependiendo del tipo de inscripción
-        radioButtons.forEach(function (radioButton) {
-            radioButton.addEventListener('change', function () {
-                if (document.getElementById('grupal').checked) {
-                    inscripcionGrupal.style.display = 'block';
-                    inscripcionIndividual.style.display = 'none';
-                } else {
-                    inscripcionGrupal.style.display = 'none';
-                    inscripcionIndividual.style.display = 'block';
-                }
-            });
-        });
     });
 </script>
-
 </body>
 </html>

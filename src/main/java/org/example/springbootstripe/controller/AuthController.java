@@ -67,6 +67,9 @@ public class AuthController {
             HttpSession session = request.getSession();
             session.setAttribute("userId", usuari.getId());
             session.setAttribute("username", usuari.getNomUsuari());
+            session.setAttribute("nom", usuari.getNom());
+            session.setAttribute("cognoms", usuari.getCognoms());
+            session.setAttribute("email", usuari.getEmail());
             return "redirect:/";
         } else {
             return "redirect:/login?error=invalidCredentials";
