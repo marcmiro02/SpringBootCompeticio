@@ -118,7 +118,7 @@ public class CompeticioController {
 
         competicioService.saveCompeticio(competicio);
 
-        return "redirect:/competicions/all"; // Redirigimos a la lista de competiciones
+        return "redirect:/pagamentsCrear/crear?id_competicio=" + competicio.getId();
     }
 
     // Mostrar todas las competiciones activas

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pago con Stripe</title>
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+<h2>Realizar pago</h2>
+<p>Precio: €<span id="preu"></span></p>
+<button id="checkout-button">Pagar</button>
+
+<script>
+    document.getElementById("preu").textContent = new URLSearchParams(window.location.search).get("preu");
+
+    document.getElementById("checkout-button").addEventListener("click", function () {
+        fetch("/stripe/create-checkout-session?id_competicio=" + new URLSearchParams(window.location.search).get("id_competicio"), {
+            method: "POST",
+            headers: { "Content-Type": "application/json" }
+        })
+            .then(response => response.json())
+            .then(session => {
+                return stripe.redirectToCheckout({ sessionId: session.id });
+            })
+            .catch(error => console.error("Error:", error));
+    });
+</script>
+</body>
+</html>
