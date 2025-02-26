@@ -2,6 +2,7 @@ package org.example.springbootstripe.controller;
 
 import org.example.springbootstripe.model.Competicio;
 import org.example.springbootstripe.model.Categoria;
+import org.example.springbootstripe.model.Tipus;
 import org.example.springbootstripe.services.CompeticioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -79,7 +80,8 @@ public class CompeticioController {
             @RequestParam("ubicacio") String ubicacio,
             @RequestParam("provincia") String provinciaNombre, // Recibe el nombre de la provincia
             @RequestParam("poblacio") String ciudadNombre, // Recibe el nombre de la ciudad
-            @RequestParam("capacitat_equip") Integer capacitatEquip
+            @RequestParam("capacitat_equip") Integer capacitatEquip,
+            @RequestParam("tipus") String tipus // Add this line
     ) {
         Competicio competicio = new Competicio();
         competicio.setNom(name);
@@ -92,7 +94,7 @@ public class CompeticioController {
         competicio.setUbicacio(ubicacio);
         competicio.setPoblacio(ciudadNombre);  // Guardamos el nombre de la ciudad
         competicio.setProvincia(provinciaNombre);  // Guardamos el nombre de la provincia
-
+        competicio.setTipus(Tipus.valueOf(tipus)); // Ensure this is set
 
         if (edatMin != null) {
             competicio.setEdatMin(edatMin);
@@ -103,10 +105,9 @@ public class CompeticioController {
         }
         if (capacitatEquip != null) {
             competicio.setCapacitatEquip(capacitatEquip);
-        }else{
+        } else {
             competicio.setCapacitatEquip(1);
         }
-
 
         if (!fotoPortada.isEmpty()) {
             try {
@@ -163,7 +164,7 @@ public class CompeticioController {
         competicioDTO.setUbicacio(competicio.getUbicacio());
         competicioDTO.setPoblacio(competicio.getPoblacio());
         competicioDTO.setProvincia(competicio.getProvincia());
-        competicioDTO.setTipus(competicio.getTipus());
+        competicioDTO.setTipus(competicio.getTipus().name());
 
 
         if (competicio.getFotoPortada() != null) {

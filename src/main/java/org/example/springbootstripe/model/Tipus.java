@@ -1,6 +1,6 @@
 package org.example.springbootstripe.model;
 
-enum Tipus {
+public enum Tipus {
     INDIVIDUAL,
     EQUIP
 }

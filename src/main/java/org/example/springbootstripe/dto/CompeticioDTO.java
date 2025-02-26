@@ -1,5 +1,7 @@
 package org.example.springbootstripe.dto;
 
+import org.example.springbootstripe.model.Tipus;
+
 public class CompeticioDTO {
     private Long id;
     private String nom;
@@ -13,7 +15,7 @@ public class CompeticioDTO {
     private String descripcio;
     private Integer capacitat;
     private Double preu;
-    private String tipus;
+    private Tipus tipus;
 
     // Getters y Setters
     public String getNom() { return nom; }
@@ -51,8 +53,8 @@ public class CompeticioDTO {
     public Double getPreu() { return preu; }
     public void setPreu(Double preu) { this.preu = preu; }
 
-    public String getTipus() { return tipus; }
-    public void setTipus(String tipus) { this.tipus = tipus; }
+    public Tipus getTipus() { return tipus; }
+    public void setTipus(String tipus) { this.tipus = Tipus.valueOf(tipus); }
 
 
 }

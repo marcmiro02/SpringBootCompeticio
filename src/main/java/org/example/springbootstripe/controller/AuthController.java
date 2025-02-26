@@ -70,9 +70,17 @@ public class AuthController {
             session.setAttribute("nom", usuari.getNom());
             session.setAttribute("cognoms", usuari.getCognoms());
             session.setAttribute("email", usuari.getEmail());
-            return "redirect:/";
+            return "redirect:competicions/";
         } else {
             return "redirect:/login?error=invalidCredentials";
         }
+    }
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        return "redirect:/login";
     }
 }
