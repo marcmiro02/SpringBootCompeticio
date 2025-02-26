@@ -165,6 +165,7 @@ public class CompeticioController {
         competicioDTO.setPoblacio(competicio.getPoblacio());
         competicioDTO.setProvincia(competicio.getProvincia());
         competicioDTO.setTipus(competicio.getTipus().name());
+        competicioDTO.setCapacitatEquip(competicio.getCapacitatEquip());
 
 
         if (competicio.getFotoPortada() != null) {

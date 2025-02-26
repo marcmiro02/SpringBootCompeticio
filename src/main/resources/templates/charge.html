@@ -1,133 +1,86 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es">
 <head>
-    <title>Charge</title>
-    <!--Bootstrap 4 CSS-->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-
-    <!--Bootstrap 4 JavaScript-->
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
-    <!--Stripe JavaScript Library-->
-    <script src="https://js.stripe.com/v3/"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagar Competición</title>
+    <script src="https://js.stripe.com/v3/"></script> <!-- Stripe.js -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="bg-light pt-5">
+<body class="bg-light">
 
-<!--hero section-->
-<section class="py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6 col-md-8 col-12 my-auto mx-auto">
-                <h1>
-                    Stripe One-Time Charge
-                </h1>
-                <p class="lead mb-4">
-                    Please fill the form below to complete the order payment
-                </p>
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 th:text="${competicio.nom}">SEMEN</h5>
-                        <p class="lead" th:text="${competicio.preu} + '€'"></p>
-                    </div>
-                </div>
-                <form action="#" id="payment-form" method="post">
-                    <!-- Hidden field for competicio ID -->
-                    <input type="hidden" id="competicio-id" th:value="${competicio.id}">
+<div class="container mt-5">
+    <h2>Pago de Inscripción - <span id="competicioNombre"></span></h2>
 
-                    <input id="api-key" type="hidden" th:value="${stripePublicKey}">
-                    <div class="form-group">
-                        <label class="font-weight-medium" for="card-element">
-                            Enter credit or debit card below
-                        </label>
-                        <div class="w-100" id="card-element">
-                            <!-- A Stripe Element will be inserted here. -->
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control" id="email" name="email"
-                               placeholder="Email Address" type="email" required>
-                    </div>
-                    <!-- Used to display Element errors. -->
-                    <div class="text-danger w-100" id="card-errors" role="alert"></div>
-                    <div class="form-group pt-2">
-                        <button class="btn btn-primary btn-block" id="submitButton" type="submit">
-                            Pay With Your Card
-                        </button>
-                        <div class="small text-muted mt-2">
-                            Pay securely with Stripe. By clicking the button above, you agree
-                            to our <a target="_blank" href="#">Terms of Service</a>,
-                            <a target="_blank" href="#">Privacy</a> and
-                            <a target="_blank" href="#">Refund</a> policies.
-                        </div>
-                    </div>
-                </form>
-                <p class="mt-5 text-muted">
-                    <small>An example project by <a th:href="@{https://attacomsian.com}" target="_blank">Atta</a>.
-                    </small>
-                </p>
-            </div>
-        </div>
+    <!-- Detalles de la competición -->
+    <div>
+        <p><strong>Competición:</strong> <span id="competicioNombre"></span></p>
+        <p><strong>Fecha de inicio:</strong> <span id="competicioFechaInici"></span></p>
+        <p><strong>Fecha de fin:</strong> <span id="competicioFechaFi"></span></p>
+        <p><strong>Precio:</strong> <span id="competicioPrecio"></span></p>
     </div>
-</section>
 
-<!--custom javascript for handling subscription-->
+    <!-- Formulario de pago -->
+    <form id="payment-form">
+        <div id="card-element">
+            <!-- A Stripe Element will be inserted here. -->
+        </div>
+
+        <!-- Used to display form errors. -->
+        <div id="card-errors" role="alert"></div>
+
+        <button id="submit" class="btn btn-success mt-3">
+            Pagar ahora
+        </button>
+    </form>
+</div>
+
 <script>
-    $(function () {
-        var API_KEY = $('#api-key').val();
-        // Create a Stripe client.
-        var stripe = Stripe(API_KEY);
+    var stripe = Stripe('{{stripePublicKey}}'); // Clave pública de Stripe
+    var elements = stripe.elements();
 
-        // Create an instance of Elements.
-        var elements = stripe.elements();
+    // Crear un elemento de tarjeta
+    var card = elements.create('card');
+    card.mount('#card-element');
 
-        // Create an instance of the card Element.
-        var card = elements.create('card');
+    // Manejar el envío del formulario de pago
+    var form = document.getElementById('payment-form');
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
 
-        // Add an instance of the card Element into the `card-element` <div>.
-        card.mount('#card-element');
-
-        // Handle real-time validation errors from the card Element.
-        card.addEventListener('change', function (event) {
-            var displayError = document.getElementById('card-errors');
-            if (event.error) {
-                displayError.textContent = event.error.message;
+        // Crea un token de pago con la información de la tarjeta
+        stripe.createToken(card).then(function (result) {
+            if (result.error) {
+                // Muestra el error al usuario
+                var errorElement = document.getElementById('card-errors');
+                errorElement.textContent = result.error.message;
             } else {
-                displayError.textContent = '';
+                // Enviar el token a tu servidor para procesar el pago
+                stripeTokenHandler(result.token);
             }
         });
-
-        // Handle form submission.
-        var form = document.getElementById('payment-form');
-        form.addEventListener('submit', function (event) {
-            event.preventDefault();
-            // handle payment
-            handlePayments();
-        });
-
-        //handle card submission
-        function handlePayments() {
-            stripe.createToken(card).then(function (result) {
-                if (result.error) {
-                    // Inform the user if there was an error.
-                    var errorElement = document.getElementById('card-errors');
-                    errorElement.textContent = result.error.message;
-                } else {
-                    // Send the token and id to your server.
-                    var token = result.token.id;
-                    var email = $('#email').val();
-                    var competicioId = $('#competicio-id').val(); // Captura el ID de la competición
-
-                    $.post(
-                        "/create-charge/" + competicioId, // Usar el ID en la URL
-                        {email: email, token: token},
-                        function (data) {
-                            alert(data.details);
-                        }, 'json');
-                }
-            });
-        }
     });
+
+    // Envía el token de pago al backend
+    function stripeTokenHandler(token) {
+        var form = document.getElementById('payment-form');
+
+        // Crea un formulario oculto con el token para enviarlo a tu servidor
+        var hiddenInput = document.createElement('input');
+        hiddenInput.setAttribute('type', 'hidden');
+        hiddenInput.setAttribute('name', 'stripeToken');
+        hiddenInput.setAttribute('value', token.id);
+        form.appendChild(hiddenInput);
+
+        // Enviar el formulario
+        form.submit();
+    }
+
+    // Mostrar los detalles de la competición
+    document.getElementById("competicioNombre").textContent = "{{competicio.nom}}";
+    document.getElementById("competicioFechaInici").textContent = "{{competicio.dataInici}}";
+    document.getElementById("competicioFechaFi").textContent = "{{competicio.dataFi}}";
+    document.getElementById("competicioPrecio").textContent = "{{competicio.preu}}";
 </script>
 
 </body>
