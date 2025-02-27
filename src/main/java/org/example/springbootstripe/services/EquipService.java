@@ -1,13 +1,12 @@
 package org.example.springbootstripe.services;
 
-import org.example.springbootstripe.model.Equip;
-import org.example.springbootstripe.repository.EquipRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
+
+import org.example.springbootstripe.model.Equip;
+import org.example.springbootstripe.repository.EquipRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class EquipService {
@@ -32,5 +31,10 @@ public class EquipService {
         if (equipRepository.existsById(id)) {
             equipRepository.deleteById(id);
         }
+    }
+
+    public Equip getEquipByUsuariId(Long idUsuari) {
+        List<Equip> equips = equipRepository.findByIdUsuari(idUsuari);
+        return equips.isEmpty() ? null : equips.get(0);
     }
 }

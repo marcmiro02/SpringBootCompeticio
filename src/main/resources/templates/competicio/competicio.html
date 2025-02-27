@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,140 +14,179 @@
             margin-top: 20px;
             display: flex;
             flex-direction: row;
-            align-items: stretch; /* Asegura que la imagen y el contenido tengan la misma altura */
+            align-items: stretch;
+            /* Asegura que la imagen y el contenido tengan la misma altura */
         }
 
         .card-img-container {
             overflow: hidden;
-            border-radius: 10px 0 0 10px; /* Bordes redondeados en la izquierda */
-            width: 300px; /* Ancho fijo para todas las imágenes */
-            height: 200px; /* Alto fijo para todas las imágenes */
+            border-radius: 10px 0 0 10px;
+            /* Bordes redondeados en la izquierda */
+            width: 300px;
+            /* Ancho fijo para todas las imágenes */
+            height: 200px;
+            /* Alto fijo para todas las imágenes */
         }
 
         .card-img-top {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Ajusta la imagen para mantener la proporción */
+            object-fit: cover;
+            /* Ajusta la imagen para mantener la proporción */
         }
 
         .card-body {
-            flex: 1; /* Ocupa el espacio restante */
+            flex: 1;
+            /* Ocupa el espacio restante */
             padding: 20px;
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Centra verticalmente el contenido */
+            justify-content: center;
+            /* Centra verticalmente el contenido */
         }
-
     </style>
 </head>
+
 <body class="bg-light">
 
-<!-- Navbar -->
-<div th:replace="~{fragments/navbar :: navbar}"></div>
+    <!-- Navbar -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div class="container mt-5">
-    <div class="card shadow-sm">
-        <!-- Contenedor de la imagen -->
-        <div class="card-img-container">
-            <img th:src="${fotoPortadaUrl}"
-                 class="card-img-top"
-                 th:alt="${'Image of ' + competicio.nom}"/>
-        </div>
-        <div class="card-body">
-            <h2 class="card-title" th:text="${competicio.nom}">Nombre de la Competición</h2>
-            <p class="card-text">
-                <span th:text="${competicio.dataInici}">Fecha de Inicio</span> /
-                <span th:text="${competicio.dataFi}">Fecha de Fin</span>
-            </p>
-            <p class="card-text">
-                <i class="fa-solid fa-map-location-dot" style="color: #1fad14;"></i>
-                <span th:text="${competicio.provincia} + ', ' + ${competicio.poblacio}"></span><br>
-            </p>
-            <p class="card-text">
-                <i class="fa-solid fa-coins" style="color: #FFD43B;"></i>
-                <span th:text="${competicio.preu}"></span><br>
-            </p>
-
-            <p class="card-text" th:text="${competicio.descripcio}"></p>
-
-            <!-- Botón de inscripción con verificación de sesión -->
-            <div th:if="${isBeforeStart}">
-                <a href="#" th:if="${currentUser != null}" class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#inscriptionModal">
-                    📌 Inscribirme
-                </a>
-                <a href="/login" th:if="${currentUser == null}" class="btn btn-success mt-3">
-                    📌 Inicia sesión para inscribirte
-                </a>
+    <div class="container mt-5">
+        <div class="card shadow-sm">
+            <!-- Contenedor de la imagen -->
+            <div class="card-img-container">
+                <img th:src="${fotoPortadaUrl}" class="card-img-top" th:alt="${'Image of ' + competicio.nom}" />
             </div>
-            <div th:if="${isOngoing}">
-                <p class="text-warning">La competición ya ha comenzado. No es posible inscribirse.</p>
-            </div>
-            <div th:if="${isFinished}">
-                <h3>Puntuacions de la Competició</h3>
-                <table id="puntuacionsTable" class="display">
-                    <thead>
-                        <tr>
-                            <th>Posició</th>
-                            <th th:if="${#strings.trim(competicio.tipus) == 'EQUIP'}">Equip</th>
-                            <th>Nom del Participant</th>
-                            <th>Puntuació</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="puntuacio, iterStat : ${puntuacions}">
-                            <td th:text="${iterStat.index + 1}"></td>
-                            <td th:if="${#strings.trim(competicio.tipus) == 'EQUIP'}" th:text="${puntuacio.equip.nomEquip}"></td>
-                            <td th:text="${puntuacio.equip.nomParticipant}"></td>
-                            <td th:text="${puntuacio.puntuacio}"></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <div class="card-body">
+                <h2 class="card-title" th:text="${competicio.nom}">Nombre de la Competición</h2>
+                <p class="card-text">
+                    <span th:text="${competicio.dataInici}">Fecha de Inicio</span> /
+                    <span th:text="${competicio.dataFi}">Fecha de Fin</span>
+                </p>
+                <p class="card-text">
+                    <i class="fa-solid fa-map-location-dot" style="color: #1fad14;"></i>
+                    <span th:text="${competicio.provincia} + ', ' + ${competicio.poblacio}"></span><br>
+                </p>
+                <p class="card-text">
+                    <i class="fa-solid fa-coins" style="color: #FFD43B;"></i>
+                    <span th:text="${competicio.preu}"></span><br>
+                </p>
 
-            <a href="/competicions/all" class="btn btn-primary">Volver</a>
-        </div>
-    </div>
-</div>
+                <p class="card-text" th:text="${competicio.descripcio}"></p>
 
-<!-- Modal -->
-<div class="modal fade" id="inscriptionModal" tabindex="-1" aria-labelledby="inscriptionModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="inscriptionModalLabel">Inscripció a la competició</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <h5 th:text="${competicio.nom}">Nombre de la Competición</h5>
-
-                <!-- Formulario de inscripción por equipos -->
-                <form th:action="@{/create-charge/{id}(id=${competicio.id})}" method="post" id="teamForm">
-                    <div th:if="${competicio.capacitatEquip > 1}" class="mb-3">
-                        <label for="teamName" class="form-label">Nom del Equip</label>
-                        <input type="text" class="form-control" id="teamName" name="teamName" placeholder="Nom del Equip" required>
+                <!-- Botón de inscripción con verificación de sesión -->
+                <div th:if="${isBeforeStart}">
+                    <a href="#" th:if="${currentUser != null}" class="btn btn-success mt-3" data-bs-toggle="modal"
+                        data-bs-target="#inscriptionModal">
+                        📌 Inscribirme
+                    </a>
+                    <a href="/login" th:if="${currentUser == null}" class="btn btn-success mt-3">
+                        📌 Inicia sesión para inscribirte
+                    </a>
+                </div>
+                <div th:if="${isOngoing}">
+                    <p class="text-warning">La competición ya ha comenzado. No es posible inscribirse.</p>
+                </div>
+                <div th:if="${isFinished}">
+                    <h3>Puntuacions de la Competició</h3>
+                    <table id="puntuacionsTable" class="display">
+                        <thead>
+                            <tr>
+                                <th>Posició</th>
+                                <th th:if="${#strings.trim(competicio.tipus) == 'EQUIP'}">Equip</th>
+                                <th>Nom del Participant</th>
+                                <th>Puntuació</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="puntuacio, iterStat : ${puntuacions}">
+                                <td th:text="${iterStat.index + 1}"></td>
+                                <td th:if="${#strings.trim(competicio.tipus) == 'EQUIP'}" th:text="${puntuacio.equip.nomEquip}"></td>
+                                <td th:text="${puntuacio.equip.nomParticipant}"></td>
+                                <td th:text="${puntuacio.puntuacio}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div th:if="${currentUser != null and isRegistered}">
+                        <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addPuntuacioModal">
+                            Afegir Puntuació
+                        </button>
                     </div>
-                    <div th:each="i, iterStat : ${#numbers.sequence(1, competicio.capacitatEquip)}" class="mb-3">
-                        <label class="form-label" th:for="'participant' + ${i}">
-                            <span th:text="${i == 1 ? 'Capitán' : 'Participante ' + (i - 1)}"></span>
-                            <i th:if="${i == 1}" class="fa-solid fa-star" style="color: gold;"></i>
-                        </label>
-                        <input type="text" th:id="'participant' + ${i}" th:name="'participant' + ${i}" class="form-control mb-3" placeholder="Nom i Cognoms" required>
-                        <input type="email" th:id="'email' + ${i}" th:name="'email' + ${i}" class="form-control" placeholder="Email" required>
+                    <div th:if="${param.error == 'not-registered'}" class="alert alert-danger mt-3">
+                        No estàs registrat a aquesta competició.
                     </div>
-                    <button type="submit" class="btn btn-primary">Inscribirse</button>
-                </form>
+                </div>
+                <br><br>
+                <a href="/competicions/all" class="btn btn-primary">Volver</a>
             </div>
         </div>
     </div>
-</div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#puntuacionsTable').DataTable();
-    });
-</script>
+    <!-- Modal -->
+    <div class="modal fade" id="inscriptionModal" tabindex="-1" aria-labelledby="inscriptionModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="inscriptionModalLabel">Inscripció a la competició</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h5 th:text="${competicio.nom}">Nombre de la Competición</h5>
+
+                    <!-- Formulario de inscripción por equipos -->
+                    <form th:action="@{/create-charge/{id}(id=${competicio.id})}" method="post" id="teamForm">
+                        <div th:if="${competicio.capacitatEquip > 1}" class="mb-3">
+                            <label for="teamName" class="form-label">Nom del Equip</label>
+                            <input type="text" class="form-control" id="teamName" name="teamName"
+                                placeholder="Nom del Equip" required>
+                        </div>
+                        <div th:each="i, iterStat : ${#numbers.sequence(1, competicio.capacitatEquip)}" class="mb-3">
+                            <label class="form-label" th:for="'participant' + ${i}">
+                                <span th:text="${i == 1 ? 'Capitán' : 'Participante ' + (i - 1)}"></span>
+                                <i th:if="${i == 1}" class="fa-solid fa-star" style="color: gold;"></i>
+                            </label>
+                            <input type="text" th:id="'participant' + ${i}" th:name="'participant' + ${i}"
+                                class="form-control mb-3" placeholder="Nom i Cognoms" required>
+                            <input type="email" th:id="'email' + ${i}" th:name="'email' + ${i}" class="form-control"
+                                placeholder="Email" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Inscribirse</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal per afegir puntuació -->
+    <div class="modal fade" id="addPuntuacioModal" tabindex="-1" aria-labelledby="addPuntuacioModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addPuntuacioModalLabel">Afegir Puntuació</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/competicions/addPuntuacio/{id}(id=${competicio.id})}" method="post">
+                        <div class="mb-3">
+                            <label for="puntuacio" class="form-label">Puntuació:</label>
+                            <input type="text" class="form-control" id="puntuacio" name="puntuacio" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Afegir</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#puntuacionsTable').DataTable();
+        });
+    </script>
 
 </body>
+
 </html>

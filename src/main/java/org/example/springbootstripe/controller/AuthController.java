@@ -1,5 +1,7 @@
 package org.example.springbootstripe.controller;
 
+import java.util.Optional;
+
 import org.example.springbootstripe.model.Rol;
 import org.example.springbootstripe.model.Usuari;
 import org.example.springbootstripe.repository.RolRepository;
@@ -13,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-
-import java.util.Optional;
 
 @Controller
 public class AuthController {
@@ -65,6 +65,7 @@ public class AuthController {
 
         if (usuari != null && password.equals(usuari.getContrasenya())) {
             HttpSession session = request.getSession();
+            session.setAttribute("currentUser", usuari);
             session.setAttribute("userId", usuari.getId());
             session.setAttribute("username", usuari.getNomUsuari());
             session.setAttribute("nom", usuari.getNom());
