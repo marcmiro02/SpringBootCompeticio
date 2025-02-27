@@ -144,6 +144,7 @@ public class CompeticioController {
         }).collect(Collectors.toList());
 
         model.addAttribute("competicions", competicionsDTO);
+        model.addAttribute("isPastEvents", false);
         return "competicio/competicions";
     }
 
@@ -182,22 +183,18 @@ public class CompeticioController {
         return "competicio/competicio"; // La ruta de la vista Thymeleaf
     }
 
-    // Página de inicio que muestra todas las competiciones
-    @GetMapping("/")
-    public String getHomePage(Model model) {
-        // Obtener todas las competiciones
-        List<Competicio> allCompeticions = competicioService.getAllCompeticions();
+    @GetMapping("/past")
+    public String getPastCompeticions(Model model) {
+        List<Competicio> pastCompeticions = competicioService.findPastCompeticions();
 
-        // Convertir las competiciones a DTOs para pasarlas a la vista
-        List<CompeticioDTO> competicionsDTO = allCompeticions.stream().map(competicio -> {
+        List<CompeticioDTO> competicionsDTO = pastCompeticions.stream().map(competicio -> {
             CompeticioDTO dto = new CompeticioDTO();
             dto.setId(competicio.getId());
             dto.setNom(competicio.getNom());
-            dto.setCategoria(competicio.getCategoria().toString()); // Convertimos el enum a String
+            dto.setCategoria(competicio.getCategoria().toString());
             dto.setDataInici(competicio.getDataInici().toString());
             dto.setDataFi(competicio.getDataFi().toString());
 
-            // Si hay foto de portada, convertirla a base64 para mostrarla en la vista
             if (competicio.getFotoPortada() != null) {
                 String base64Image = Base64.getEncoder().encodeToString(competicio.getFotoPortada());
                 dto.setFotoPortada("data:image/jpeg;base64," + base64Image);
@@ -206,10 +203,8 @@ public class CompeticioController {
             return dto;
         }).collect(Collectors.toList());
 
-        // Agregar las competiciones DTO al modelo para pasarlas a la vista
         model.addAttribute("competicions", competicionsDTO);
-
-        // Retornar la vista de inicio (homepage)
-        return "homepage";
+        model.addAttribute("isPastEvents", true);
+        return "competicio/competicions";
     }
 }
