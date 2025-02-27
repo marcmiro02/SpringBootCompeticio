@@ -9,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.example.springbootstripe.dto.CompeticioDTO;
 
 import java.util.Base64;
@@ -41,46 +44,29 @@ public class PaymentController {
     }
 
     /*========== REST APIs for Handling Payments ===================*/
-
-
     @PostMapping("/create-charge/{id}")
-    public String createCharge(
-            @PathVariable Long id,
-            @RequestParam String email,
-            @RequestParam String token,
-            @RequestParam(required = false) String nombre,
-            @RequestParam(required = false) String apellidos,
-            @RequestParam(required = false) String nombreEquipo,
-            @RequestParam(required = false) String participantes,
-            @RequestParam(required = false) String capitan,
-            @RequestParam(required = false) Integer capacitatEquip,
-            Model model
-    ) {
+    public @ResponseBody
+    Response createCharge(String email, String token, @PathVariable Long id, Model model) {
         Competicio competicio = competicioService.getCompeticioById(id);
-        if (competicio == null) {
-            return "redirect:/charge?id=" + id + "&error=invalidCompetition&message=Competición+no+encontrada";
-        }
+        CompeticioDTO competicioDTO = new CompeticioDTO();
+        competicioDTO.setNom(competicio.getNom());
+        competicioDTO.setPreu(competicio.getPreu());
+        competicioDTO.setDataInici(competicio.getDataInici().toString());
+        competicioDTO.setDataFi(competicio.getDataFi().toString());
 
+        if (competicio.getFotoPortada() != null) {
+            String base64Image = Base64.getEncoder().encodeToString(competicio.getFotoPortada());
+            competicioDTO.setFotoPortada("data:image/jpeg;base64," + base64Image);
+        }
+        model.addAttribute("competicio", competicioDTO);
         if (token == null) {
-            return "redirect:/charge?id=" + id + "&error=missingToken&message=El+token+de+Stripe+es+requerido";
+            return new Response(false, "Stripe payment token is missing. Please, try again later.");
         }
-
-        String chargeId;
-        if (nombre != null && apellidos != null) {
-            // Inscripción individual
-            chargeId = stripeService.createCharge(email, token, competicio.getPreu(), competicio.getNom(), competicio.getDataInici().toString(), competicio.getDataFi().toString());
-        } else if (nombreEquipo != null && participantes != null && capitan != null && capacitatEquip != null) {
-            // Inscripción por equipo
-            chargeId = stripeService.createCharge(email, token, competicio.getPreu(), competicio.getNom(), competicio.getDataInici().toString(), competicio.getDataFi().toString());
-        } else {
-            return "redirect:/charge?id=" + id + "&error=invalidData&message=Faltan+datos+para+la+inscripción";
-        }
-
+        String chargeId = stripeService.createCharge(email, token, competicio.getPreu(), competicio.getNom(), competicio.getDataInici().toString(), competicio.getDataFi().toString());
         if (chargeId == null) {
-            return "redirect:/charge?id=" + id + "&error=paymentError&message=Hubo+un+error+al+procesar+el+pago";
+            return new Response(false, "An error occurred while trying to create a charge.");
         }
-
-        return "redirect:/charge?id=" + id + "&success=true&message=Pago+realizado+con+éxito";
+        return new Response(true, "Success! Your charge id is " + chargeId);
     }
 
 
