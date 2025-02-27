@@ -178,7 +178,7 @@ public class CompeticioController {
 
 
     // Mostrar detalles de una competicion por ID
-    @GetMapping("/{id}")
+        @GetMapping("/{id}")
     public String getCompeticioById(@PathVariable Long id, @RequestParam(value = "order", defaultValue = "asc") String order, HttpSession session, Model model) {
         Competicio competicio = competicioService.getCompeticioById(id);
         
@@ -207,10 +207,15 @@ public class CompeticioController {
         }
     
         // Obtenir l'usuari actual des de la sessió
-        String currentUser = (String) session.getAttribute("username");
-        if (currentUser != null) {
-            model.addAttribute("currentUser", currentUser);
-            System.out.println("currentUser: " + currentUser);
+        String username = (String) session.getAttribute("username");
+        if (username != null) {
+            model.addAttribute("currentUser", username);
+            System.out.println("currentUser: " + username);
+    
+            // Verificar si l'usuari està registrat a la competició
+            Usuari usuari = usuariService.findByNomUsuari(username);
+            boolean isRegistered = registreService.isUsuariRegistrat(usuari.getId(), competicio.getId());
+            model.addAttribute("isRegistered", isRegistered);
         }
     
         String fotoPortadaUrl = competicio.getFotoPortada() != null

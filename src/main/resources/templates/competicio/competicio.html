@@ -108,7 +108,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <div th:if="${currentUser != null}">
+                    <div th:if="${currentUser != null and isRegistered}">
                         <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addPuntuacioModal">
                             Afegir Puntuació
                         </button>
@@ -117,6 +117,7 @@
                         No estàs registrat a aquesta competició.
                     </div>
                 </div>
+                <br><br>
                 <a href="/competicions/all" class="btn btn-primary">Volver</a>
             </div>
         </div>
