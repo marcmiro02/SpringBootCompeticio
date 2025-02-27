@@ -41,12 +41,9 @@ public class AuthController {
                                @RequestParam String cognoms,
                                @RequestParam String nom_usuari,
                                @RequestParam String email,
-                               @RequestParam String contrasenya,
-                               @RequestParam int id_rol) {
+                               @RequestParam String contrasenya) {
 
-        if (id_rol <= 0) {
-            throw new IllegalArgumentException("El ID de rol no puede ser nulo o inválido");
-        }
+
 
         Usuari usuari = new Usuari();
         usuari.setNom(nom);
@@ -54,7 +51,7 @@ public class AuthController {
         usuari.setNomUsuari(nom_usuari);
         usuari.setEmail(email);
         usuari.setContrasenya(contrasenya);
-        usuari.setIdRol(id_rol);
+        usuari.setIdRol(2);
 
         usuariRepository.save(usuari);
         return "redirect:/login";
@@ -81,7 +78,7 @@ public class AuthController {
                 session.setAttribute("roleName", rol.getNom());
             }
 
-            return "redirect:competicions/";
+            return "redirect:competicions/all";
         } else {
             return "redirect:/login?error=invalidCredentials";
         }

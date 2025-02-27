@@ -1,10 +1,12 @@
 package org.example.springbootstripe.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.example.springbootstripe.dto.CompeticioDTO;
 import org.example.springbootstripe.model.Competicio;
 import org.example.springbootstripe.model.Rol;
 import org.example.springbootstripe.model.Usuari;
 import org.example.springbootstripe.repository.RolRepository;
+import org.example.springbootstripe.repository.UsuariRepository;
 import org.example.springbootstripe.services.RolService;
 import org.example.springbootstripe.services.UsuariService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,8 @@ public class UsuariController {
 
     @Autowired
     private RolRepository rolRepository;
+    @Autowired
+    private UsuariRepository usuariRepository;
 
     @PostMapping
     public ResponseEntity<Usuari> createUsuari(@RequestBody Usuari usuari) {
@@ -114,6 +118,58 @@ public class UsuariController {
         usuariService.deleteUsuari(id);
         return "redirect:/usuaris/all";
     }
+
+    @GetMapping("/create")
+    public String showCreateForm(Model model) {
+        model.addAttribute("usuari", new Usuari());
+        model.addAttribute("roles", rolRepository.findAll());
+        return "usuari/crearUsuari";
+    }
+
+    @PostMapping("/create")
+    public String registerUser(@RequestParam String nom,
+                               @RequestParam String cognoms,
+                               @RequestParam String nom_usuari,
+                               @RequestParam String email,
+                               @RequestParam String contrasenya,
+                               @RequestParam int id_rol) {
+
+        if (id_rol <= 0) {
+            throw new IllegalArgumentException("El ID de rol no puede ser nulo o inválido");
+        }
+
+        Usuari usuari = new Usuari();
+        usuari.setNom(nom);
+        usuari.setCognoms(cognoms);
+        usuari.setNomUsuari(nom_usuari);
+        usuari.setEmail(email);
+        usuari.setContrasenya(contrasenya);
+        usuari.setIdRol(id_rol);
+
+        usuariRepository.save(usuari);
+        return "redirect:/login";
+    }
+
+    @GetMapping("/profile")
+    public String showProfile(Model model, HttpSession session) {
+        // Obtener el ID del usuario actual de la sesión
+        Long userId = (Long) session.getAttribute("userId");
+
+        // Verificar si el ID del usuario está presente en la sesión
+        if (userId != null) {
+            // Obtener los detalles del usuario desde la base de datos
+            Usuari usuari = usuariService.getUsuariById(userId);
+
+            // Agregar los detalles del usuario al modelo
+            model.addAttribute("usuari", usuari);
+        } else {
+            // Manejar el caso en que el usuario no esté logueado
+            return "redirect:/login";
+        }
+
+        return "profile";
+    }
+
 
 
 }
