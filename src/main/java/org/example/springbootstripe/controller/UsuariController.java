@@ -5,6 +5,7 @@ import org.example.springbootstripe.model.Rol;
 import org.example.springbootstripe.model.Usuari;
 import org.example.springbootstripe.repository.RolRepository;
 import org.example.springbootstripe.repository.UsuariRepository;
+import org.example.springbootstripe.services.CompeticioService;
 import org.example.springbootstripe.services.RolService;
 import org.example.springbootstripe.services.UsuariService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.example.springbootstripe.model.Competicio;
+
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,6 +27,8 @@ public class UsuariController {
     private UsuariService usuariService;
     @Autowired
     private RolService rolService;
+    @Autowired
+    private CompeticioService competicioService;
 
     @Autowired
     private RolRepository rolRepository;
@@ -166,6 +171,29 @@ public class UsuariController {
         }
 
         return "/perfil/profile";
+    }
+    @GetMapping("/competicionsPerfil")
+    public String showCompeticionsPerfil(Model model, HttpSession session) {
+        // Obtener el ID del usuario actual de la sesión
+        Long userId = (Long) session.getAttribute("userId");
+
+        // Verificar si el ID del usuario está presente en la sesión
+        if (userId != null) {
+            // Obtener las competiciones creadas por el usuario
+            List<Competicio> createdCompeticions = competicioService.getCompeticionsByCreatorId(userId);
+
+            // Obtener las competiciones en las que el usuario está registrado
+            List<Competicio> registeredCompeticions = competicioService.getCompeticionsByUserId(userId);
+
+            // Agregar las competiciones al modelo
+            model.addAttribute("createdCompeticions", createdCompeticions);
+            model.addAttribute("registeredCompeticions", registeredCompeticions);
+        } else {
+            // Manejar el caso en que el usuario no esté logueado
+            return "redirect:/login";
+        }
+
+        return "perfil/competicionsPerfil";
     }
 
 

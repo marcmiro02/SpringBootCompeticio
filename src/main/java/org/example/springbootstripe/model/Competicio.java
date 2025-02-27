@@ -70,6 +70,9 @@ public class Competicio {
     @Column(name = "tipus", nullable = false)
     private Tipus tipus;  // El tipo de inscripción (INDIVIDUAL o EQUIP)
 
+    @Column(name = "id_usuari")
+    private Long idUsuari;
+
     // Getters and Setters
     public Long getId() {
         return id;
@@ -197,6 +200,13 @@ public class Competicio {
 
     public void setTipus(Tipus tipus) {
         this.tipus = tipus;
+    }
+
+    public Long getIdUsuari() {
+        return idUsuari;
+    }
+    public void setIdUsuari(Long idUsuari) {
+        this.idUsuari = idUsuari;
     }
 }
 
