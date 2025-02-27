@@ -37,6 +37,7 @@ public class HomeController {
                 dto.setFotoPortada("data:image/jpeg;base64," + base64Image);
             }
 
+
             return dto;
         }).collect(Collectors.toList());
 

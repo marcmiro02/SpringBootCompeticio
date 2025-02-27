@@ -13,6 +13,7 @@ import org.example.springbootstripe.model.Equip;
 import org.example.springbootstripe.model.Puntuacio;
 import org.example.springbootstripe.model.Tipus;
 import org.example.springbootstripe.model.Usuari;
+import org.example.springbootstripe.repository.UsuariRepository;
 import org.example.springbootstripe.services.CompeticioService;
 import org.example.springbootstripe.services.EquipService;
 import org.example.springbootstripe.services.PuntuacioService;
@@ -89,6 +90,8 @@ public class CompeticioController {
     @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("competicio", new Competicio());
+        model.addAttribute("categories", Categoria.values()); // Añadir valores del enum Categoria
+        model.addAttribute("tipusList", Tipus.values()); // Añadir valores del enum Tipus
         return "competicio/crearCompeticio";
     }
 
@@ -109,8 +112,10 @@ public class CompeticioController {
             @RequestParam("provincia") String provinciaNombre, // Recibe el nombre de la provincia
             @RequestParam("poblacio") String ciudadNombre, // Recibe el nombre de la ciudad
             @RequestParam("capacitat_equip") Integer capacitatEquip,
-            @RequestParam("tipus") String tipus // Add this line
+            @RequestParam("tipus") String tipus, // Tipo de competición
+            @RequestParam("id_usuari") Long idUsuari // Recibimos el id del usuario
     ) {
+        // Crear nueva instancia de Competicio
         Competicio competicio = new Competicio();
         competicio.setNom(name);
         competicio.setDescripcio(descripcio);
@@ -122,8 +127,12 @@ public class CompeticioController {
         competicio.setUbicacio(ubicacio);
         competicio.setPoblacio(ciudadNombre);  // Guardamos el nombre de la ciudad
         competicio.setProvincia(provinciaNombre);  // Guardamos el nombre de la provincia
-        competicio.setTipus(Tipus.valueOf(tipus)); // Ensure this is set
+        competicio.setTipus(Tipus.valueOf(tipus)); // Tipo de competición
 
+        // Asignar la entidad Usuari a la competición
+        competicio.setIdUsuari(idUsuari);
+
+        // Asignar los valores opcionales si se han proporcionado
         if (edatMin != null) {
             competicio.setEdatMin(edatMin);
         }
@@ -131,23 +140,29 @@ public class CompeticioController {
         if (edatMax != null) {
             competicio.setEdatMax(edatMax);
         }
+
+        // Si no se ha proporcionado un valor para capacitatEquip, asignar 1 por defecto
         if (capacitatEquip != null) {
             competicio.setCapacitatEquip(capacitatEquip);
         } else {
-            competicio.setCapacitatEquip(1);
+            competicio.setCapacitatEquip(1); // Valor por defecto
         }
 
+        // Manejo del archivo fotoPortada
         if (!fotoPortada.isEmpty()) {
             try {
                 competicio.setFotoPortada(fotoPortada.getBytes());
             } catch (IOException e) {
                 e.printStackTrace();
+                return "Error al cargar la foto de portada";
             }
         }
 
+        // Guardamos la competición en la base de datos
         competicioService.saveCompeticio(competicio);
 
-        return "redirect:/pagamentsCrear/crear?id_competicio=" + competicio.getId();
+        // Redirigimos a la lista de competiciones después de guardar
+        return "redirect:/competicions/all";
     }
 
     // Mostrar todas las competiciones activas

@@ -1,6 +1,7 @@
 package org.example.springbootstripe.controller;
 
 import jakarta.servlet.http.HttpSession;
+import org.example.springbootstripe.dto.CompeticioDTO;
 import org.example.springbootstripe.model.Rol;
 import org.example.springbootstripe.model.Usuari;
 import org.example.springbootstripe.repository.RolRepository;
@@ -194,6 +195,38 @@ public class UsuariController {
         }
 
         return "perfil/competicionsPerfil";
+    }
+    @GetMapping("/competicionsGestio")
+    public String showCompeticionsGestio(Model model, HttpSession session) {
+        // Obtener el ID del usuario actual de la sesión
+        String userRol = (String) session.getAttribute("roleName");
+        System.out.println("User Role: " + userRol);
+        if ("ADMIN".equals(userRol)) {
+            List<Competicio> activeCompeticions = competicioService.getAllCompeticions();
+
+            List<CompeticioDTO> competicionsDTO = activeCompeticions.stream().map(competicio -> {
+                CompeticioDTO dto = new CompeticioDTO();
+                dto.setId(competicio.getId());
+                dto.setNom(competicio.getNom());
+                dto.setCategoria(competicio.getCategoria().toString()); // Convertimos el enum a String
+                dto.setDataInici(competicio.getDataInici().toString());
+                dto.setDataFi(competicio.getDataFi().toString());
+
+                if (competicio.getFotoPortada() != null) {
+                    String base64Image = Base64.getEncoder().encodeToString(competicio.getFotoPortada());
+                    dto.setFotoPortada("data:image/jpeg;base64," + base64Image);
+                }
+
+                return dto;
+            }).collect(Collectors.toList());
+
+            model.addAttribute("competicions", competicionsDTO);
+            model.addAttribute("isPastEvents", false);
+            return "administrador/competicionsGestio";
+        } else {
+            // Manejar el caso en que el usuario no esté logueado
+            return "redirect:/home/";
+        }
     }
 
 
