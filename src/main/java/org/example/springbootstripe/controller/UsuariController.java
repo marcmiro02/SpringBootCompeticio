@@ -1,8 +1,6 @@
 package org.example.springbootstripe.controller;
 
 import jakarta.servlet.http.HttpSession;
-import org.example.springbootstripe.dto.CompeticioDTO;
-import org.example.springbootstripe.model.Competicio;
 import org.example.springbootstripe.model.Rol;
 import org.example.springbootstripe.model.Usuari;
 import org.example.springbootstripe.repository.RolRepository;
@@ -167,7 +165,7 @@ public class UsuariController {
             return "redirect:/login";
         }
 
-        return "profile";
+        return "/perfil/profile";
     }
 
 
