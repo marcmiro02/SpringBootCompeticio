@@ -1,6 +1,14 @@
 package org.example.springbootstripe.model;
 
-import jakarta.persistence.*;
+import java.util.List;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "equips")
@@ -12,14 +20,15 @@ public class Equip {
 
     @Column(name = "nom_equip", nullable = false)
     private String nomEquip;
+
     @Column(name = "nom_participant", nullable = false)
     private String nomParticipant;
 
-    @Column(name = "id_equip")
-    private Long idEquip;
-
     @Column(name = "id_usuari", nullable = false)
     private Long idUsuari;
+
+    @OneToMany(mappedBy = "equip")
+    private List<Puntuacio> puntuacions;
 
     public Long getId() {
         return id;
@@ -29,6 +38,21 @@ public class Equip {
         this.id = id;
     }
 
+    public String getNomEquip() {
+        return nomEquip;
+    }
+
+    public void setNomEquip(String nomEquip) {
+        this.nomEquip = nomEquip;
+    }
+
+    public String getNomParticipant() {
+        return nomParticipant;
+    }
+
+    public void setNomParticipant(String nomParticipant) {
+        this.nomParticipant = nomParticipant;
+    }
 
     public Long getIdUsuari() {
         return idUsuari;
@@ -38,24 +62,11 @@ public class Equip {
         this.idUsuari = idUsuari;
     }
 
-    public Long getIdEquip() {
-        return idEquip;
-    }
-    public void setIdEquip(Long idEquip) {
-        this.idEquip = idEquip;
+    public List<Puntuacio> getPuntuacions() {
+        return puntuacions;
     }
 
-    public String getNomEquip() {
-        return nomEquip;
-    }
-    public void setNomEquip(String nomEquip) {
-        this.nomEquip = nomEquip;
-    }
-    public String getNomParticipant() {
-        return nomParticipant;
-    }
-    public void setNomParticipant(String nomParticipant) {
-        this.nomParticipant = nomParticipant;
+    public void setPuntuacions(List<Puntuacio> puntuacions) {
+        this.puntuacions = puntuacions;
     }
 }
-
