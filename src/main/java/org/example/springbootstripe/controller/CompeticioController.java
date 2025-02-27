@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.example.springbootstripe.dto.CompeticioDTO;
@@ -181,11 +182,11 @@ public class CompeticioController {
     @GetMapping("/{id}")
     public String getCompeticioById(@PathVariable Long id, @RequestParam(value = "order", defaultValue = "asc") String order, HttpSession session, Model model) {
         Competicio competicio = competicioService.getCompeticioById(id);
-
+        
         if (competicio == null) {
             return "redirect:/competicions/all";
         }
-
+    
         CompeticioDTO competicioDTO = new CompeticioDTO();
         competicioDTO.setId(competicio.getId());
         competicioDTO.setNom(competicio.getNom());
@@ -200,42 +201,46 @@ public class CompeticioController {
         competicioDTO.setProvincia(competicio.getProvincia());
         competicioDTO.setTipus(competicio.getTipus().name());
         competicioDTO.setCapacitatEquip(competicio.getCapacitatEquip());
-
+    
         if (competicio.getFotoPortada() != null) {
             String base64Image = Base64.getEncoder().encodeToString(competicio.getFotoPortada());
             competicioDTO.setFotoPortada("data:image/jpeg;base64," + base64Image);
         }
-
+    
         // Obtenir l'usuari actual des de la sessió
         String username = (String) session.getAttribute("username");
         if (username != null) {
             model.addAttribute("currentUser", username);
             System.out.println("currentUser: " + username);
-
+    
             // Verificar si l'usuari està registrat a la competició
             Usuari usuari = usuariService.findByNomUsuari(username);
             boolean isRegistered = registreService.isUsuariRegistrat(usuari.getId(), competicio.getId());
             model.addAttribute("isRegistered", isRegistered);
-        }
 
+            // Verificar si l'usuari ja ha afegit una puntuació
+            Optional<Puntuacio> userPuntuacio = puntuacioService.findByCompeticioIdAndEquipIdUsuari(competicio.getId(), usuari.getId());
+            model.addAttribute("userPuntuacio", userPuntuacio.orElse(null));
+        }
+    
         String fotoPortadaUrl = competicio.getFotoPortada() != null
                 ? "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(competicio.getFotoPortada())
                 : "/images/logos/DAM.png";
         model.addAttribute("fotoPortadaUrl", fotoPortadaUrl);
-
+    
         LocalDate now = LocalDate.now();
         boolean isBeforeStart = competicio.getDataInici().isAfter(now);
         boolean isOngoing = competicio.getDataInici().isBefore(now) && competicio.getDataFi().isAfter(now);
         boolean isFinished = competicio.getDataFi().isBefore(now);
-
+    
         model.addAttribute("isBeforeStart", isBeforeStart);
         model.addAttribute("isOngoing", isOngoing);
         model.addAttribute("isFinished", isFinished);
-
+    
         System.out.println("isBeforeStart: " + isBeforeStart);
         System.out.println("isOngoing: " + isOngoing);
         System.out.println("isFinished: " + isFinished);
-
+    
         if (isFinished) {
             List<Puntuacio> puntuacions = competicioService.getPuntuacionsByCompeticioId(id);
             if ("asc".equals(order)) {
@@ -245,9 +250,9 @@ public class CompeticioController {
             }
             model.addAttribute("puntuacions", puntuacions);
         }
-
+    
         model.addAttribute("competicio", competicioDTO);
-
+    
         return "competicio/competicio";
     }
 
@@ -276,42 +281,87 @@ public class CompeticioController {
         return "competicio/competicions";
     }
 
-    @PostMapping("/addPuntuacio/{id}")
-    public String addPuntuacio(@PathVariable Long id, @RequestParam String puntuacio, HttpSession session, Model model) {
+
+
+    
+                @PostMapping("/addPuntuacio/{id}")
+        public String addPuntuacio(@PathVariable Long id, @RequestParam String puntuacio, HttpSession session, Model model) {
+            Competicio competicio = competicioService.getCompeticioById(id);
+            if (competicio == null) {
+                return "redirect:/competicions/all";
+            }
+        
+            // Obtenir l'usuari actual des de la sessió
+            String username = (String) session.getAttribute("username");
+            if (username == null) {
+                return "redirect:/login";
+            }
+        
+            Usuari usuari = usuariService.findByNomUsuari(username);
+            if (usuari == null) {
+                return "redirect:/login";
+            }
+        
+            // Verificar si l'usuari està registrat a la competició
+            if (!registreService.isUsuariRegistrat(usuari.getId(), competicio.getId())) {
+                model.addAttribute("error", "not-registered");
+                return "redirect:/competicions/" + id + "?error=not-registered";
+            }
+        
+            // Verificar si l'usuari ja ha afegit una puntuació
+            Optional<Puntuacio> existingPuntuacio = puntuacioService.findByCompeticioIdAndEquipIdUsuari(competicio.getId(), usuari.getId());
+            if (existingPuntuacio.isPresent()) {
+                model.addAttribute("error", "already-added");
+                return "redirect:/competicions/" + id + "?error=already-added";
+            }
+        
+            // Crear una nova puntuació
+            Puntuacio novaPuntuacio = new Puntuacio();
+            novaPuntuacio.setPuntuacio(puntuacio);
+            novaPuntuacio.setCompeticio(competicio);
+        
+            // Obtenir l'equip de l'usuari
+            Equip equip = equipService.getEquipByUsuariId(usuari.getId());
+            novaPuntuacio.setEquip(equip);
+        
+            // Guardar la nova puntuació
+            puntuacioService.savePuntuacio(novaPuntuacio);
+        
+            // Actualitzar el model amb la nova puntuació
+            model.addAttribute("userPuntuacio", novaPuntuacio);
+        
+            return "redirect:/competicions/" + id;
+        }
+
+
+
+
+        @PostMapping("/editPuntuacio/{id}")
+    public String editPuntuacio(@PathVariable Long id, @RequestParam String puntuacio, HttpSession session, Model model) {
         Competicio competicio = competicioService.getCompeticioById(id);
         if (competicio == null) {
             return "redirect:/competicions/all";
         }
-
+    
         // Obtenir l'usuari actual des de la sessió
         String username = (String) session.getAttribute("username");
         if (username == null) {
             return "redirect:/login";
         }
-
+    
         Usuari usuari = usuariService.findByNomUsuari(username);
         if (usuari == null) {
             return "redirect:/login";
         }
-
-        // Verificar si l'usuari està registrat a la competició
-        if (!registreService.isUsuariRegistrat(usuari.getId(), competicio.getId())) {
-            model.addAttribute("error", "not-registered");
-            return "redirect:/competicions/" + id + "?error=not-registered";
+    
+        // Verificar si l'usuari ja ha afegit una puntuació
+        Optional<Puntuacio> existingPuntuacio = puntuacioService.findByCompeticioIdAndEquipIdUsuari(competicio.getId(), usuari.getId());
+        if (existingPuntuacio.isPresent()) {
+            Puntuacio puntuacioToUpdate = existingPuntuacio.get();
+            puntuacioToUpdate.setPuntuacio(puntuacio);
+            puntuacioService.savePuntuacio(puntuacioToUpdate);
         }
-
-        // Crear una nova puntuació
-        Puntuacio novaPuntuacio = new Puntuacio();
-        novaPuntuacio.setPuntuacio(puntuacio);
-        novaPuntuacio.setCompeticio(competicio);
-
-        // Obtenir l'equip de l'usuari
-        Equip equip = equipService.getEquipByUsuariId(usuari.getId());
-        novaPuntuacio.setEquip(equip);
-
-        // Guardar la nova puntuació
-        puntuacioService.savePuntuacio(novaPuntuacio);
-
+    
         return "redirect:/competicions/" + id;
     }
 }
