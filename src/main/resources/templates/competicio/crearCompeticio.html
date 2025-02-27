@@ -138,36 +138,28 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="capacitat" class="form-label">Capacidad:</label>
-                    <input type="number" id="capacitat" name="capacitat" class="form-control" required>
+                    <label for="tipus" class="form-label">Tipus:</label>
+                    <select id="tipus" name="tipus" class="form-select" required onchange="toggleCapacidadEquip()">
+                        <option value="" disabled selected>Seleccione un tipus</option>
+                        <th:block th:each="tipus : ${tipusList}">
+                            <option th:value="${tipus.name()}" th:text="${tipus.name()}"></option>
+                        </th:block>
+                    </select>
                 </div>
 
                 <div class="mb-3">
                     <label for="categoria" class="form-label">Categoría:</label>
-                    <select id="categoria" name="categoria" class="form-select" required onchange="toggleCapacidadEquip()">
-                        <option value="INDIVIDUAL_MASCULÍ">Masculí</option>
-                        <option value="INDIVIDUAL_FEMENÍ">Femení</option>
-                        <option value="INDIVIDUAL_MIXT">Individual Mixt</option>
-                        <option value="EQUIP_MASCULÍ">Equip Masculí</option>
-                        <option value="EQUIP_FEMENÍ">Equip Femení</option>
-                        <option value="EQUIP_MIXT">Equip Mixt</option>
-                        <option value="DOBLES_MASCULÍ">Dobles Masculí</option>
-                        <option value="DOBLES_FEMENÍ">Dobles Femení</option>
-                        <option value="DOBLES_MIXT">Dobles Mixt</option>
-                        <option value="RELLEUS_MASCULÍ">Relleus Masculí</option>
-                        <option value="RELLEUS_FEMENÍ">Relleus Femení</option>
-                        <option value="RELLEUS_MIXT">Relleus Mixt</option>
-                        <option value="EXTREM_INDIVIDUAL">Extrem Individual</option>
-                        <option value="EXTREM_EQUIP">Extrem Equip</option>
+                    <select id="categoria" name="categoria" class="form-select" required>
+                        <option value="" disabled selected>Seleccione una categoría</option>
+                        <th:block th:each="categoria : ${categories}">
+                            <option th:value="${categoria.name()}" th:text="${categoria.name()}"></option>
+                        </th:block>
                     </select>
                 </div>
 
                 <div class="mb-3">
-                    <label for="tipus" class="form-label">Tipus:</label>
-                    <select id="tipus" name="tipus" class="form-select" required onchange="toggleCapacidadEquip()">
-                        <option value="INDIVIDUAL">Individual</option>
-                        <option value="EQUIP">Equip</option>
-                    </select>
+                    <label for="capacitat" class="form-label">Capacidad:</label>
+                    <input type="number" id="capacitat" name="capacitat" class="form-control" required>
                 </div>
 
                 <!-- Campo para la capacidad del equipo (oculto por defecto) -->
@@ -175,7 +167,6 @@
                     <label for="capacitat_equip" class="form-label">Capacidad del Equipo:</label>
                     <input type="number" id="capacitat_equip" name="capacitat_equip" class="form-control" value="1">
                 </div>
-
 
                 <div class="mb-3">
                     <label for="dataInici" class="form-label">Fecha de Inicio:</label>
@@ -199,11 +190,6 @@
                     <input type="number" step="0.01" id="preu" name="preu" class="form-control" required>
                 </div>
 
-                <div class="mb-3">
-                    <label for="ubicacio" class="form-label">Ubicación:</label>
-                    <input type="text" id="ubicacio" name="ubicacio" class="form-control">
-                </div>
-
                 <!-- Selección de provincia -->
                 <div class="mb-3">
                     <label for="provincia" class="form-label">Provincia:</label>
@@ -218,6 +204,11 @@
                     <select id="poblacio" name="poblacio" class="form-select" required>
                         <option value="">Seleccione una ciudad</option>
                     </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="ubicacio" class="form-label">Ubicación:</label>
+                    <input type="text" id="ubicacio" name="ubicacio" class="form-control">
                 </div>
 
                 <!-- Campo adicional de observaciones -->
@@ -262,7 +253,7 @@
         const tipus = document.getElementById("tipus").value;
         const capacidadEquip = document.getElementById("capacidadEquip");
         const capacitatEquipInput = document.getElementById("capacitat_equip");
-        if (tipus === "EQUIP") {
+        if (tipus === "EQUIPS") {
             capacidadEquip.style.display = "block";
         } else {
             capacidadEquip.style.display = "none";
@@ -329,8 +320,6 @@
             });
     }
 
-
-
     document.querySelector('form').addEventListener('submit', function (event) {
         var provinciaSelect = document.getElementById('provincia');
         var poblacioSelect = document.getElementById('poblacio');
@@ -361,7 +350,6 @@
         loadProvinces();
     });
 </script>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
