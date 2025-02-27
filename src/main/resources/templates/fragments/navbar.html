@@ -108,7 +108,14 @@
                 </div>
 
                 <div th:if="${session.roleName== 'ADMIN'}" class="ms-auto">
-                    <button class="login-btn" onclick="window.location.href='/usuaris/all'">Usuaris</button>
+                    <ul class="navbar-nav ms-20">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/usuaris/all">
+                                <i class="fas fa-list me-1"></i>
+                                Usuaris
+                            </a>
+                        </li>
+                    </ul>
                 </div>
 
                 <!-- Si el usuario ESTÁ logueado -->

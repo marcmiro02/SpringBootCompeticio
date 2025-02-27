@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create User</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h2>Create New User</h2>
+    <form th:action="@{/usuaris}" th:object="${usuari}" method="post">
+        <div class="form-group">
+            <label for="nom">First Name</label>
+            <input type="text" class="form-control" id="nom" th:field="*{nom}" placeholder="Enter first name" required>
+        </div>
+        <div class="form-group">
+            <label for="cognoms">Last Name</label>
+        </div>
+        <div class="form-group">
+            <label for="nomUsuari">Username</label>
+            <input type="text" class="form-control" id="nomUsuari" th:field="*{nomUsuari}" placeholder="Enter username" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="Enter email" required>
+        </div>
+        <label for="contrasenya">Password</label>
+        <input type="password" class="form-control" id="contrasenya" th:field="*{contrasenya}" placeholder="Enter password" required>
+</div>
+<div class="form-group">
+    <label for="idRol">Role</label>
+    <select class="form-control" id="idRol" th:field="*{idRol}" required>
+        <option th:each="rol : ${roles}" th:value="${rol.id}" th:text="${rol.nom}">Role</option>
+    </select>
+</div>
+<button type="submit" class="btn btn-primary">Create User</button>
+</form>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

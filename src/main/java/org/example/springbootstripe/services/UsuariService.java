@@ -29,9 +29,10 @@ public class UsuariService {
     }
 
     public Usuari updateUsuari(Long id, Usuari updatedUsuari) {
-        if (usuariRepository.existsById(id)) {
+        Optional<Usuari> existingUsuari = usuariRepository.findById(id);
+        if (existingUsuari.isPresent()) {
             updatedUsuari.setId(id);
-            return usuariRepository.save(updatedUsuari);
+            return usuariRepository.save(updatedUsuari); // Guarda los cambios
         }
         return null;
     }

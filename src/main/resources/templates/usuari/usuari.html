@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Usuario</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .card {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .form-label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+<!-- Navbar -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container mt-5">
+    <div class="card">
+        <h2 class="card-title text-center">Editar Usuario</h2>
+        <form action="/usuaris/actualitzar" method="POST">
+                <input type="hidden" class="form-control" id="id" name="id" th:value="${usuari.id}" readonly>
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="nombre" name="nom" th:value="${usuari.nom}" required>
+            </div>
+            <div class="mb-3">
+                <label for="cognoms" class="form-label">Apellidos</label>
+                <input type="text" class="form-control" id="cognoms" name="cognoms" th:value="${usuari.cognoms}" required>
+            </div>
+            <div class="mb-3">
+                <label for="nom_usuari" class="form-label">Nombre de Usuario</label>
+                <input type="text" class="form-control" id="nom_usuari" name="nomUsuari" th:value="${usuari.nomUsuari}" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" th:value="${usuari.email}" required>
+            </div>
+            <div class="mb-3">
+                <label for="contrasenya" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="contrasenya" name="contrasenya">
+            </div>
+
+            <div class="mb-3">
+                <label for="rol" class="form-label">Rol</label>
+                <select class="form-select" id="rol" name="rol">
+                    <option th:each="rol : ${roles}" th:value="${rol.id}" th:text="${rol.nom}" th:selected="${usuari.idRol == rol.id}"></option>
+                </select>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Actualizar</button>
+                <a href="/usuaris/all" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

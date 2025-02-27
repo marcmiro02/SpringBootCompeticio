@@ -47,5 +47,8 @@ public class RolService {
     public Optional<Rol> findById(Long id) {
         return rolRepository.findById(Math.toIntExact(id));
     }
+    public Optional<Rol> findByName(String nombre) {
+        return rolRepository.findByNom(nombre);
+    }
 
 }
