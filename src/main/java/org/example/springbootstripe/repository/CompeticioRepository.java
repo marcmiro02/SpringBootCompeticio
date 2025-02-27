@@ -14,5 +14,4 @@ public interface CompeticioRepository extends JpaRepository<Competicio, Long> {
     List<Competicio> findByDataFiBeforeOrderByDataFiDesc(LocalDate date);
 
     List<Competicio> findByDataFiAfterOrderByDataIniciAsc(LocalDate date);
-
 }

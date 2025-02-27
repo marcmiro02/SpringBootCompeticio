@@ -1,23 +1,31 @@
 package org.example.springbootstripe.controller;
 
-import org.example.springbootstripe.model.Competicio;
-import org.example.springbootstripe.model.Categoria;
-import org.example.springbootstripe.model.Tipus;
-import org.example.springbootstripe.services.CompeticioService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.example.springbootstripe.dto.CompeticioDTO;
-
 import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.example.springbootstripe.dto.CompeticioDTO;
+import org.example.springbootstripe.model.Categoria;
+import org.example.springbootstripe.model.Competicio;
+import org.example.springbootstripe.model.Puntuacio;
+import org.example.springbootstripe.model.Tipus;
+import org.example.springbootstripe.services.CompeticioService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/competicions")
@@ -149,39 +157,68 @@ public class CompeticioController {
     }
 
     // Mostrar detalles de una competicion por ID
-    @GetMapping("/{id}")
-    public String getCompeticioById(@PathVariable Long id, Principal principal, Model model) {
-        Competicio competicio = competicioService.getCompeticioById(id);
 
-        CompeticioDTO competicioDTO = new CompeticioDTO();
-        competicioDTO.setId(competicio.getId());
-        competicioDTO.setNom(competicio.getNom());
-        competicioDTO.setCategoria(competicio.getCategoria().toString()); // Convertimos el enum a String
-        competicioDTO.setDataInici(competicio.getDataInici().toString());
-        competicioDTO.setDataFi(competicio.getDataFi().toString());
-        competicioDTO.setDescripcio(competicio.getDescripcio());
-        competicioDTO.setCapacitat(competicio.getCapacitat());
-        competicioDTO.setPreu(competicio.getPreu());
-        competicioDTO.setUbicacio(competicio.getUbicacio());
-        competicioDTO.setPoblacio(competicio.getPoblacio());
-        competicioDTO.setProvincia(competicio.getProvincia());
-        competicioDTO.setTipus(competicio.getTipus().name());
-        competicioDTO.setCapacitatEquip(competicio.getCapacitatEquip());
-
-
-        if (competicio.getFotoPortada() != null) {
-            String base64Image = Base64.getEncoder().encodeToString(competicio.getFotoPortada());
-            competicioDTO.setFotoPortada("data:image/jpeg;base64," + base64Image);
-        }
-
-        if (principal != null) {
-            model.addAttribute("currentUser", principal.getName()); // Pasamos el nombre del usuario logueado
-        }
-
-        model.addAttribute("competicio", competicioDTO);
-
-        return "competicio/competicio"; // La ruta de la vista Thymeleaf
+// Mostrar detalles de una competicion por ID
+@GetMapping("/{id}")
+public String getCompeticioById(@PathVariable Long id, @RequestParam(value = "order", defaultValue = "asc") String order, Principal principal, Model model) {
+    Competicio competicio = competicioService.getCompeticioById(id);
+    
+    if (competicio == null) {
+        return "redirect:/competicions/all";
     }
+
+    CompeticioDTO competicioDTO = new CompeticioDTO();
+    competicioDTO.setId(competicio.getId());
+    competicioDTO.setNom(competicio.getNom());
+    competicioDTO.setCategoria(competicio.getCategoria().toString());
+    competicioDTO.setDataInici(competicio.getDataInici().toString());
+    competicioDTO.setDataFi(competicio.getDataFi().toString());
+    competicioDTO.setDescripcio(competicio.getDescripcio());
+    competicioDTO.setCapacitat(competicio.getCapacitat());
+    competicioDTO.setPreu(competicio.getPreu());
+    competicioDTO.setUbicacio(competicio.getUbicacio());
+    competicioDTO.setPoblacio(competicio.getPoblacio());
+    competicioDTO.setProvincia(competicio.getProvincia());
+    competicioDTO.setTipus(competicio.getTipus().name());
+    competicioDTO.setCapacitatEquip(competicio.getCapacitatEquip());
+
+    if (competicio.getFotoPortada() != null) {
+        String base64Image = Base64.getEncoder().encodeToString(competicio.getFotoPortada());
+        competicioDTO.setFotoPortada("data:image/jpeg;base64," + base64Image);
+    }
+
+    if (principal != null) {
+        model.addAttribute("currentUser", principal.getName());
+    }
+
+    String fotoPortadaUrl = competicio.getFotoPortada() != null
+            ? "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(competicio.getFotoPortada())
+            : "/images/logos/DAM.png";
+    model.addAttribute("fotoPortadaUrl", fotoPortadaUrl);
+
+    LocalDate now = LocalDate.now();
+    boolean isBeforeStart = competicio.getDataInici().isAfter(now);
+    boolean isOngoing = competicio.getDataInici().isBefore(now) && competicio.getDataFi().isAfter(now);
+    boolean isFinished = competicio.getDataFi().isBefore(now);
+
+    model.addAttribute("isBeforeStart", isBeforeStart);
+    model.addAttribute("isOngoing", isOngoing);
+    model.addAttribute("isFinished", isFinished);
+
+    if (isFinished) {
+        List<Puntuacio> puntuacions = competicioService.getPuntuacionsByCompeticioId(id);
+        if ("asc".equals(order)) {
+            puntuacions.sort((p1, p2) -> p1.getPuntuacio().compareTo(p2.getPuntuacio())); // Ordenar por tiempo ascendente
+        } else {
+            puntuacions.sort((p1, p2) -> p2.getPuntuacio().compareTo(p1.getPuntuacio())); // Ordenar por tiempo descendente
+        }
+        model.addAttribute("puntuacions", puntuacions);
+    }
+
+    model.addAttribute("competicio", competicioDTO);
+
+    return "competicio/competicio";
+}
 
     @GetMapping("/past")
     public String getPastCompeticions(Model model) {

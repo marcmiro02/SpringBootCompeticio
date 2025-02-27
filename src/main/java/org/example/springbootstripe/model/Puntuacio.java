@@ -1,6 +1,13 @@
 package org.example.springbootstripe.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "puntuacions")
@@ -10,14 +17,16 @@ public class Puntuacio {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "id_registre", nullable = false)
-    private Long idRegistre;
-
     @Column(name = "puntuacio", nullable = false)
-    private Integer puntuacio;
+    private String puntuacio;
 
-    @Column(name = "id_usuari", nullable = false)
-    private Long idUsuari;
+    @ManyToOne
+    @JoinColumn(name = "id_competicio", nullable = false)
+    private Competicio competicio;
+
+    @ManyToOne
+    @JoinColumn(name = "id_equip", nullable = false)
+    private Equip equip;
 
     public Long getId() {
         return id;
@@ -27,28 +36,27 @@ public class Puntuacio {
         this.id = id;
     }
 
-    public Long getIdRegistre() {
-        return idRegistre;
-    }
-
-    public void setIdRegistre(Long idRegistre) {
-        this.idRegistre = idRegistre;
-    }
-
-    public Integer getPuntuacio() {
+    public String getPuntuacio() {
         return puntuacio;
     }
 
-    public void setPuntuacio(Integer puntuacio) {
+    public void setPuntuacio(String puntuacio) {
         this.puntuacio = puntuacio;
     }
 
-    public Long getIdUsuari() {
-        return idUsuari;
+    public Competicio getCompeticio() {
+        return competicio;
     }
 
-    public void setIdUsuari(Long idUsuari) {
-        this.idUsuari = idUsuari;
+    public void setCompeticio(Competicio competicio) {
+        this.competicio = competicio;
+    }
+
+    public Equip getEquip() {
+        return equip;
+    }
+
+    public void setEquip(Equip equip) {
+        this.equip = equip;
     }
 }
-
