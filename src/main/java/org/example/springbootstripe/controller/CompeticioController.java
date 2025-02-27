@@ -8,10 +8,8 @@ package org.example.springbootstripe.controller;
     import java.util.stream.Collectors;
 
     import org.example.springbootstripe.dto.CompeticioDTO;
-    import org.example.springbootstripe.model.Categoria;
-    import org.example.springbootstripe.model.Competicio;
-    import org.example.springbootstripe.model.Puntuacio;
-    import org.example.springbootstripe.model.Tipus;
+    import org.example.springbootstripe.model.*;
+    import org.example.springbootstripe.repository.UsuariRepository;
     import org.example.springbootstripe.services.CompeticioService;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.http.ResponseEntity;
@@ -33,6 +31,8 @@ package org.example.springbootstripe.controller;
 
         @Autowired
         private CompeticioService competicioService;
+        @Autowired
+        private UsuariRepository usuariRepository;
 
         // API Endpoint para crear competiciones
         @PostMapping("/api")
@@ -91,8 +91,10 @@ package org.example.springbootstripe.controller;
                 @RequestParam("provincia") String provinciaNombre, // Recibe el nombre de la provincia
                 @RequestParam("poblacio") String ciudadNombre, // Recibe el nombre de la ciudad
                 @RequestParam("capacitat_equip") Integer capacitatEquip,
-                @RequestParam("tipus") String tipus // Add this line
+                @RequestParam("tipus") String tipus, // Tipo de competición
+                @RequestParam("id_usuari") Long idUsuari // Recibimos el id del usuario
         ) {
+            // Crear nueva instancia de Competicio
             Competicio competicio = new Competicio();
             competicio.setNom(name);
             competicio.setDescripcio(descripcio);
@@ -104,8 +106,16 @@ package org.example.springbootstripe.controller;
             competicio.setUbicacio(ubicacio);
             competicio.setPoblacio(ciudadNombre);  // Guardamos el nombre de la ciudad
             competicio.setProvincia(provinciaNombre);  // Guardamos el nombre de la provincia
-            competicio.setTipus(Tipus.valueOf(tipus)); // Ensure this is set
+            competicio.setTipus(Tipus.valueOf(tipus)); // Tipo de competición
 
+            // Buscar al usuario por su ID
+            Usuari usuari = usuariRepository.findById(idUsuari)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+            // Asignar la entidad Usuari a la competición
+            competicio.setUsuari(usuari);
+
+            // Asignar los valores opcionales si se han proporcionado
             if (edatMin != null) {
                 competicio.setEdatMin(edatMin);
             }
@@ -113,60 +123,46 @@ package org.example.springbootstripe.controller;
             if (edatMax != null) {
                 competicio.setEdatMax(edatMax);
             }
+
+            // Si no se ha proporcionado un valor para capacitatEquip, asignar 1 por defecto
             if (capacitatEquip != null) {
                 competicio.setCapacitatEquip(capacitatEquip);
             } else {
-                competicio.setCapacitatEquip(1);
+                competicio.setCapacitatEquip(1); // Valor por defecto
             }
 
+            // Manejo del archivo fotoPortada
             if (!fotoPortada.isEmpty()) {
                 try {
                     competicio.setFotoPortada(fotoPortada.getBytes());
                 } catch (IOException e) {
                     e.printStackTrace();
+                    return "Error al cargar la foto de portada";
                 }
             }
 
+            // Guardamos la competición en la base de datos
             competicioService.saveCompeticio(competicio);
 
+            // Redirigimos a la lista de competiciones después de guardar
             return "redirect:/competicions/all";
         }
 
         // Mostrar todas las competiciones activas
-        @GetMapping("/all")
-        public String getActiveCompeticions(Model model) {
-            List<Competicio> activeCompeticions = competicioService.findActiveCompeticions();
-
-            List<CompeticioDTO> competicionsDTO = activeCompeticions.stream().map(competicio -> {
-                CompeticioDTO dto = new CompeticioDTO();
-                dto.setId(competicio.getId());
-                dto.setNom(competicio.getNom());
-                dto.setCategoria(competicio.getCategoria().toString()); // Convertimos el enum a String
-                dto.setDataInici(competicio.getDataInici().toString());
-                dto.setDataFi(competicio.getDataFi().toString());
-
-                if (competicio.getFotoPortada() != null) {
-                    String base64Image = Base64.getEncoder().encodeToString(competicio.getFotoPortada());
-                    dto.setFotoPortada("data:image/jpeg;base64," + base64Image);
-                }
-
-                return dto;
-            }).collect(Collectors.toList());
-
-            model.addAttribute("competicions", competicionsDTO);
-            model.addAttribute("isPastEvents", false);
-            return "competicio/competicions";
-        }
-
-        // Mostrar detalles de una competicion por ID
         @GetMapping("/{id}")
-        public String getCompeticioById(@PathVariable Long id, @RequestParam(value = "order", defaultValue = "asc") String order, Principal principal, Model model) {
+        public String getCompeticioById(@PathVariable Long id,
+                                        @RequestParam(value = "order", defaultValue = "asc") String order,
+                                        Principal principal,
+                                        Model model) {
+            // Obtener la competencia por su ID
             Competicio competicio = competicioService.getCompeticioById(id);
 
+            // Si no se encuentra la competencia, redirigir a la lista de competiciones
             if (competicio == null) {
                 return "redirect:/competicions/all";
             }
 
+            // Crear el DTO para la competencia
             CompeticioDTO competicioDTO = new CompeticioDTO();
             competicioDTO.setId(competicio.getId());
             competicioDTO.setNom(competicio.getNom());
@@ -181,6 +177,7 @@ package org.example.springbootstripe.controller;
             competicioDTO.setProvincia(competicio.getProvincia());
             competicioDTO.setTipus(competicio.getTipus().name());
             competicioDTO.setCapacitatEquip(competicio.getCapacitatEquip());
+            competicioDTO.setId_usuari(competicio.getUsuari().getId());  // Corregido aquí
 
             if (competicio.getFotoPortada() != null) {
                 String base64Image = Base64.getEncoder().encodeToString(competicio.getFotoPortada());
@@ -193,7 +190,7 @@ package org.example.springbootstripe.controller;
 
             String fotoPortadaUrl = competicio.getFotoPortada() != null
                     ? "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(competicio.getFotoPortada())
-                    : "/images/logos/DAM.png";
+                    : "/images/logos/DAM.png";  // Imagen predeterminada
             model.addAttribute("fotoPortadaUrl", fotoPortadaUrl);
 
             LocalDate now = LocalDate.now();
@@ -204,21 +201,25 @@ package org.example.springbootstripe.controller;
             model.addAttribute("isBeforeStart", isBeforeStart);
             model.addAttribute("isOngoing", isOngoing);
             model.addAttribute("isFinished", isFinished);
+            model.addAttribute("idUsuariCompeticio", competicio.getUsuari().getId());  // Aquí también es id del usuario
 
             if (isFinished) {
                 List<Puntuacio> puntuacions = competicioService.getPuntuacionsByCompeticioId(id);
                 if ("asc".equals(order)) {
-                    puntuacions.sort((p1, p2) -> p1.getPuntuacio().compareTo(p2.getPuntuacio())); // Ordenar por tiempo ascendente
+                    puntuacions.sort((p1, p2) -> p1.getPuntuacio().compareTo(p2.getPuntuacio()));  // Ordenar ascendente
                 } else {
-                    puntuacions.sort((p1, p2) -> p2.getPuntuacio().compareTo(p1.getPuntuacio())); // Ordenar por tiempo descendente
+                    puntuacions.sort((p1, p2) -> p2.getPuntuacio().compareTo(p1.getPuntuacio()));  // Ordenar descendente
                 }
                 model.addAttribute("puntuacions", puntuacions);
             }
 
+            // Añadir el DTO de la competencia al modelo para la vista
             model.addAttribute("competicio", competicioDTO);
 
+            // Retornar la vista de la competencia
             return "competicio/competicio";
         }
+
 
         @GetMapping("/past")
         public String getPastCompeticions(Model model) {

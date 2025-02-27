@@ -1,16 +1,7 @@
 package org.example.springbootstripe.model;
 
 import java.time.LocalDate;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "competicions")
@@ -31,7 +22,7 @@ public class Competicio {
     private Integer capacitat;
 
     @Column(name = "capacitat_equip")
-    private Integer capacitatEquip;  // Campo opcional para equipos
+    private Integer capacitatEquip;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "categoria", nullable = false)
@@ -65,138 +56,64 @@ public class Competicio {
     @Column(name = "provincia", nullable = false)
     private String provincia;
 
-    // Nueva propiedad tipus
     @Enumerated(EnumType.STRING)
     @Column(name = "tipus", nullable = false)
-    private Tipus tipus;  // El tipo de inscripción (INDIVIDUAL o EQUIP)
+    private Tipus tipus;
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
+    // Relación con la entidad Usuari (ahora con tipo Usuari)
+    @ManyToOne
+    @JoinColumn(name = "id_usuari", nullable = false)
+    private Usuari usuari; // Cambié Integer por Usuari
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    // Getters y Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public String getNom() {
-        return nom;
-    }
+    public String getNom() { return nom; }
+    public void setNom(String nom) { this.nom = nom; }
 
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
+    public String getDescripcio() { return descripcio; }
+    public void setDescripcio(String descripcio) { this.descripcio = descripcio; }
 
-    public String getDescripcio() {
-        return descripcio;
-    }
+    public Integer getCapacitat() { return capacitat; }
+    public void setCapacitat(Integer capacitat) { this.capacitat = capacitat; }
 
-    public void setDescripcio(String descripcio) {
-        this.descripcio = descripcio;
-    }
+    public Integer getCapacitatEquip() { return capacitatEquip; }
+    public void setCapacitatEquip(Integer capacitatEquip) { this.capacitatEquip = capacitatEquip; }
 
-    public Integer getCapacitat() {
-        return capacitat;
-    }
+    public Categoria getCategoria() { return categoria; }
+    public void setCategoria(Categoria categoria) { this.categoria = categoria; }
 
-    public void setCapacitat(Integer capacitat) {
-        this.capacitat = capacitat;
-    }
+    public LocalDate getDataInici() { return dataInici; }
+    public void setDataInici(LocalDate dataInici) { this.dataInici = dataInici; }
 
-    public Integer getCapacitatEquip() {
-        return capacitatEquip;
-    }
+    public LocalDate getDataFi() { return dataFi; }
+    public void setDataFi(LocalDate dataFi) { this.dataFi = dataFi; }
 
-    public void setCapacitatEquip(Integer capacitatEquip) {
-        this.capacitatEquip = capacitatEquip;
-    }
+    public Integer getEdatMin() { return edatMin; }
+    public void setEdatMin(Integer edatMin) { this.edatMin = edatMin; }
 
-    public Categoria getCategoria() {
-        return categoria;
-    }
+    public Integer getEdatMax() { return edatMax; }
+    public void setEdatMax(Integer edatMax) { this.edatMax = edatMax; }
 
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
-    }
+    public byte[] getFotoPortada() { return fotoPortada; }
+    public void setFotoPortada(byte[] fotoPortada) { this.fotoPortada = fotoPortada; }
 
-    public LocalDate getDataInici() {
-        return dataInici;
-    }
+    public Double getPreu() { return preu; }
+    public void setPreu(Double preu) { this.preu = preu; }
 
-    public void setDataInici(LocalDate dataInici) {
-        this.dataInici = dataInici;
-    }
+    public String getUbicacio() { return ubicacio; }
+    public void setUbicacio(String ubicacio) { this.ubicacio = ubicacio; }
 
-    public LocalDate getDataFi() {
-        return dataFi;
-    }
+    public String getPoblacio() { return poblacio; }
+    public void setPoblacio(String poblacio) { this.poblacio = poblacio; }
 
-    public void setDataFi(LocalDate dataFi) {
-        this.dataFi = dataFi;
-    }
+    public String getProvincia() { return provincia; }
+    public void setProvincia(String provincia) { this.provincia = provincia; }
 
-    public Integer getEdatMin() {
-        return edatMin;
-    }
+    public Tipus getTipus() { return tipus; }
+    public void setTipus(Tipus tipus) { this.tipus = tipus; }
 
-    public void setEdatMin(Integer edatMin) {
-        this.edatMin = edatMin;
-    }
-
-    public Integer getEdatMax() {
-        return edatMax;
-    }
-
-    public void setEdatMax(Integer edatMax) {
-        this.edatMax = edatMax;
-    }
-
-    public byte[] getFotoPortada() {
-        return fotoPortada;
-    }
-
-    public void setFotoPortada(byte[] fotoPortada) {
-        this.fotoPortada = fotoPortada;
-    }
-
-    public Double getPreu() {
-        return preu;
-    }
-
-    public void setPreu(Double preu) {
-        this.preu = preu;
-    }
-
-    public String getUbicacio() {
-        return ubicacio;
-    }
-
-    public void setUbicacio(String ubicacio) {
-        this.ubicacio = ubicacio;
-    }
-
-    public String getPoblacio() {
-        return poblacio;
-    }
-
-    public void setPoblacio(String poblacio) {
-        this.poblacio = poblacio;
-    }
-
-    public String getProvincia() {
-        return provincia;
-    }
-
-    public void setProvincia(String provincia) {
-        this.provincia = provincia;
-    }
-
-    public Tipus getTipus() {
-        return tipus;
-    }
-
-    public void setTipus(Tipus tipus) {
-        this.tipus = tipus;
-    }
+    public Usuari getUsuari() { return usuari; }
+    public void setUsuari(Usuari usuari) { this.usuari = usuari; }
 }
-

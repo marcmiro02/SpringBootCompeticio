@@ -85,28 +85,36 @@
                 <h3>Puntuacions de la Competició</h3>
                 <table id="puntuacionsTable" class="display">
                     <thead>
-                        <tr>
-                            <th>Posició</th>
-                            <th th:if="${#strings.trim(competicio.tipus) == 'EQUIP'}">Equip</th>
-                            <th>Nom del Participant</th>
-                            <th>Puntuació</th>
-                        </tr>
+                    <tr>
+                        <th>Posició</th>
+                        <th th:if="${#strings.trim(competicio.tipus) == 'EQUIP'}">Equip</th>
+                        <th>Nom del Participant</th>
+                        <th>Puntuació</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="puntuacio, iterStat : ${puntuacions}">
-                            <td th:text="${iterStat.index + 1}"></td>
-                            <td th:if="${#strings.trim(competicio.tipus) == 'EQUIP'}" th:text="${puntuacio.equip.nomEquip}"></td>
-                            <td th:text="${puntuacio.equip.nomParticipant}"></td>
-                            <td th:text="${puntuacio.puntuacio}"></td>
-                        </tr>
+                    <tr th:each="puntuacio, iterStat : ${puntuacions}">
+                        <td th:text="${iterStat.index + 1}"></td>
+                        <td th:if="${#strings.trim(competicio.tipus) == 'EQUIP'}" th:text="${puntuacio.equip.nomEquip}"></td>
+                        <td th:text="${puntuacio.equip.nomParticipant}"></td>
+                        <td th:text="${puntuacio.puntuacio}"></td>
+                    </tr>
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Botón Editar solo visible para el usuario que creó la competición -->
+            <div th:if="${competicio.id_usuari == session.userId}">
+                <a href="/competicio/{id}/edit" th:attr="id=${competicio.id}" class="btn btn-warning mt-3">
+                    ✏️ Editar
+                </a>
             </div>
 
             <a href="/competicions/all" class="btn btn-primary">Volver</a>
         </div>
     </div>
 </div>
+
 
 <!-- Modal -->
 <div class="modal fade" id="inscriptionModal" tabindex="-1" aria-labelledby="inscriptionModalLabel" aria-hidden="true">
