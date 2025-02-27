@@ -86,7 +86,7 @@
                     <thead>
                         <tr>
                             <th>Posició</th>
-                            <th th:if="${competicio.tipus == 'EQUIP'}">Equip</th>
+                            <th th:if="${#strings.trim(competicio.tipus) == 'EQUIP'}">Equip</th>
                             <th>Nom del Participant</th>
                             <th>Puntuació</th>
                         </tr>
@@ -94,7 +94,7 @@
                     <tbody>
                         <tr th:each="puntuacio, iterStat : ${puntuacions}">
                             <td th:text="${iterStat.index + 1}"></td>
-                            <td th:if="${competicio.tipus == 'EQUIP'}" th:text="${puntuacio.equip.nomEquip}"></td>
+                            <td th:if="${#strings.trim(competicio.tipus) == 'EQUIP'}" th:text="${puntuacio.equip.nomEquip}"></td>
                             <td th:text="${puntuacio.equip.nomParticipant}"></td>
                             <td th:text="${puntuacio.puntuacio}"></td>
                         </tr>

@@ -131,7 +131,7 @@
         <div class="row">
             <div th:each="competicio : ${latestCompeticions}" class="col-sm-6 col-md-4 col-lg-3 mb-4">
                 <div class="card shadow-sm">
-                    <img th:src="${competicio.fotoPortada != null ? competicio.fotoPortada : '/images/default.jpg'}"
+                    <img th:src="${competicio.fotoPortada != null ? competicio.fotoPortada : '/images/logos/DAM.png'}"
                          class="card-img-top img-fluid"
                          th:alt="${'Image of ' + competicio.nom}">
                     <div class="card-body">
