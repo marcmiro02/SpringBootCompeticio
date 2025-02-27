@@ -217,6 +217,10 @@
                     <textarea id="observacions" name="observacions" class="form-control" rows="3"></textarea>
                 </div>
 
+                <div class="mb-3">
+                    <input type="hidden" name="id_usuari" th:value="${session.userId}" />
+                </div>
+
                 <!-- Requisitos -->
                 <h2 class="h5 mt-4">Requisitos</h2>
 

@@ -73,7 +73,7 @@ public class UsuariController {
             return userMap;
         }).collect(Collectors.toList());
         model.addAttribute("users", usuarisWithRoles);
-        return "usuari/usuaris";
+        return "administrador/usuaris";
     }
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
@@ -81,7 +81,7 @@ public class UsuariController {
         model.addAttribute("usuari", usuari);
         model.addAttribute("roles", rolRepository.findAll());
 
-        return "usuari/usuari";
+        return "administrador/usuari";
     }
     @PostMapping("/actualitzar")
     public String actualizarUsuario(@RequestParam("rol") Long rolId, @ModelAttribute Usuari usuari) {
@@ -126,7 +126,7 @@ public class UsuariController {
     public String showCreateForm(Model model) {
         model.addAttribute("usuari", new Usuari());
         model.addAttribute("roles", rolRepository.findAll());
-        return "usuari/crearUsuari";
+        return "administrador/crearUsuari";
     }
 
     @PostMapping("/create")
