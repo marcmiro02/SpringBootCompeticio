@@ -84,4 +84,9 @@ public class Usuari {
     public void setIdRol(int idRol) {
         this.idRol = idRol;
     }
+    public String getNomComplet(){
+        return this.nom + " " + this.cognoms;
+    }
+
+
 }

@@ -107,6 +107,10 @@
                     <button class="login-btn" onclick="window.location.href='/login'">Login</button>
                 </div>
 
+                <div th:if="${session.roleName== 'ADMIN'}" class="ms-auto">
+                    <button class="login-btn" onclick="window.location.href='/usuaris/all'">Usuaris</button>
+                </div>
+
                 <!-- Si el usuario ESTÁ logueado -->
                 <div th:if="${session.username != null}" class="ms-auto flex items-center">
                     <span class="welcome-text" th:text="'Benvingut, ' + ${session.username}"></span>
