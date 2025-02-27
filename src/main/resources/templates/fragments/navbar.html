@@ -108,12 +108,16 @@
                 </div>
 
                 <div th:if="${session.roleName== 'ADMIN'}" class="ms-auto">
-                    <ul class="navbar-nav ms-0"> <!-- Usamos ms-0 para quitar márgenes adicionales -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="/usuaris/all">
+                    <ul class="navbar-nav ms-0">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-list me-1"></i>
-                                Usuaris
+                                Administració
                             </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
+                                <li><a class="dropdown-item" href="/usuaris/all">Gestio de Usuaris</a></li>
+                                <li><a class="dropdown-item" href="/competicions/all">Gestio de Competicions</a></li>
+                            </ul>
                         </li>
                     </ul>
                 </div>
@@ -129,6 +133,7 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="/usuaris/profile">Perfil</a></li>
+                                <li><a class="dropdown-item" href="/usuaris/competicionsPerfil">Les meves competicions</a></li>
                                 <li><a class="dropdown-item" href="/logout">Cerrar sesión</a></li>
                             </ul>
                         </li>
