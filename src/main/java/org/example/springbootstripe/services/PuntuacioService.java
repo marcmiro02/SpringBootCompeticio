@@ -1,13 +1,12 @@
 package org.example.springbootstripe.services;
 
-import org.example.springbootstripe.model.Puntuacio;
-import org.example.springbootstripe.repository.PuntuacioRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
+
+import org.example.springbootstripe.model.Puntuacio;
+import org.example.springbootstripe.repository.PuntuacioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class PuntuacioService {
@@ -32,5 +31,9 @@ public class PuntuacioService {
         if (puntuacioRepository.existsById(id)) {
             puntuacioRepository.deleteById(id);
         }
+    }
+
+    public Optional<Puntuacio> findByCompeticioIdAndEquipIdUsuari(Long competicioId, Long idUsuari) {
+        return puntuacioRepository.findByCompeticioIdAndEquipIdUsuari(competicioId, idUsuari);
     }
 }

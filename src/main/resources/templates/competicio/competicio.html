@@ -109,12 +109,60 @@
                         </tbody>
                     </table>
                     <div th:if="${currentUser != null and isRegistered}">
-                        <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addPuntuacioModal">
+                        <button type="button" class="btn btn-primary mt-3" th:if="${userPuntuacio == null}" data-bs-toggle="modal" data-bs-target="#addPuntuacioModal">
                             Afegir Puntuació
+                        </button>
+                        <button type="button" class="btn btn-primary mt-3" th:if="${userPuntuacio != null}" data-bs-toggle="modal" data-bs-target="#editPuntuacioModal">
+                            Editar Puntuació
                         </button>
                     </div>
                     <div th:if="${param.error == 'not-registered'}" class="alert alert-danger mt-3">
                         No estàs registrat a aquesta competició.
+                    </div>
+                    <div th:if="${param.error == 'already-added'}" class="alert alert-danger mt-3">
+                        Ja has afegit una puntuació a aquesta competició.
+                    </div>
+                </div>
+                
+                <!-- Modal per afegir puntuació -->
+                <div class="modal fade" id="addPuntuacioModal" tabindex="-1" aria-labelledby="addPuntuacioModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addPuntuacioModalLabel">Afegir Puntuació</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form th:action="@{/competicions/addPuntuacio/{id}(id=${competicio.id})}" method="post">
+                                    <div class="mb-3">
+                                        <label for="puntuacio" class="form-label">Puntuació:</label>
+                                        <input type="text" class="form-control" id="puntuacio" name="puntuacio" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Afegir</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Modal per editar puntuació -->
+                <div class="modal fade" id="editPuntuacioModal" tabindex="-1" aria-labelledby="editPuntuacioModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editPuntuacioModalLabel">Editar Puntuació</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form th:action="@{/competicions/editPuntuacio/{id}(id=${competicio.id})}" method="post">
+                                    <div class="mb-3">
+                                        <label for="puntuacio" class="form-label">Puntuació:</label>
+                                        <input type="text" class="form-control" id="puntuacio" name="puntuacio" th:value="${userPuntuacio.puntuacio}" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <br><br>
@@ -153,26 +201,6 @@
                                 placeholder="Email" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Inscribirse</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal per afegir puntuació -->
-    <div class="modal fade" id="addPuntuacioModal" tabindex="-1" aria-labelledby="addPuntuacioModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addPuntuacioModalLabel">Afegir Puntuació</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form th:action="@{/competicions/addPuntuacio/{id}(id=${competicio.id})}" method="post">
-                        <div class="mb-3">
-                            <label for="puntuacio" class="form-label">Puntuació:</label>
-                            <input type="text" class="form-control" id="puntuacio" name="puntuacio" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Afegir</button>
                     </form>
                 </div>
             </div>
