@@ -30,10 +30,7 @@ public class PaymentController {
         this.stripeService = stripeService;
     }
 
-    @GetMapping("/")
-    public String homepage() {
-        return "homepage";
-    }
+
 
     @GetMapping("/charge")
     public String chargePage(Model model) {

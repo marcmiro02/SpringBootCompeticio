@@ -42,7 +42,16 @@ public class CompeticioService {
             competicioRepository.deleteById(id);
         }
     }
+
     public List<Competicio> findActiveCompeticions() {
-        return competicioRepository.findByDataFiAfter(LocalDate.now());
+        return competicioRepository.findByDataFiAfterOrderByDataIniciAsc(LocalDate.now());
+    }
+
+    public List<Competicio> getLatestCompeticions() {
+        return competicioRepository.findTop8ByDataIniciAfterOrderByDataInici(LocalDate.now());
+    }
+
+    public List<Competicio> findPastCompeticions() {
+        return competicioRepository.findByDataFiBeforeOrderByDataFiDesc(LocalDate.now());
     }
 }

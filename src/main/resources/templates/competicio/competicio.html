@@ -41,7 +41,21 @@
 <!-- Navbar -->
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
+<div th:if="${session.username != null}" class="ms-auto flex items-center">
+    <span class="welcome-text" th:text="'Benvingut, ' + ${session.username}"></span>
 
+    <ul class="navbar-nav ms-3">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle profile-icon" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-user-circle"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="/perfil">Perfil</a></li>
+                <li><a class="dropdown-item" href="/logout">Cerrar sesión</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
 
 <div class="container mt-5">
     <div class="card shadow-sm">
