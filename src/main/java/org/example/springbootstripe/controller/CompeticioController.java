@@ -140,10 +140,8 @@ package org.example.springbootstripe.controller;
                     return "Error al cargar la foto de portada";
                 }
             }
-
             // Guardamos la competición en la base de datos
             competicioService.saveCompeticio(competicio);
-
             // Redirigimos a la lista de competiciones después de guardar
             return "redirect:/competicions/all";
         }

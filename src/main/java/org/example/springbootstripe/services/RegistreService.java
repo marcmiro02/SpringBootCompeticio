@@ -33,4 +33,7 @@ public class RegistreService {
             registreRepository.deleteById(id);
         }
     }
+    public boolean isUsuariRegistrat(Long idUsuari, Long idCompeticio) {
+        return registreRepository.existsByIdUsuariAndIdCompeticio(idUsuari, idCompeticio);
+    }
 }

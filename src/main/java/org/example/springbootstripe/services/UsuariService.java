@@ -1,13 +1,12 @@
 package org.example.springbootstripe.services;
 
-import org.example.springbootstripe.model.Usuari;
-import org.example.springbootstripe.repository.UsuariRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
+
+import org.example.springbootstripe.model.Usuari;
+import org.example.springbootstripe.repository.UsuariRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class UsuariService {
@@ -43,4 +42,7 @@ public class UsuariService {
         }
     }
 
+    public Usuari findByNomUsuari(String username) {
+        return usuariRepository.findByNomUsuari(username);
+    }
 }

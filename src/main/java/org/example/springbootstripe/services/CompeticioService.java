@@ -62,4 +62,12 @@ package org.example.springbootstripe.services;
         public List<Puntuacio> getPuntuacionsByCompeticioId(Long competicioId) {
             return puntuacioRepository.findByCompeticioId(competicioId);
         }
+
+        public List<Competicio> getCompeticionsByCreatorId(Long userId) {
+            return competicioRepository.findByIdUsuari(userId);
+        }
+        public List<Competicio> getCompeticionsByUserId(Long userId) {
+            return competicioRepository.getCompeticionsByUserId(userId);
+        }
+
     }
