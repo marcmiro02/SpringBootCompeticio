@@ -79,7 +79,7 @@ public class AuthController {
                 session.setAttribute("roleName", rol.getNom());
             }
 
-            return "redirect:competicions/all";
+            return "redirect:home/";
         } else {
             return "redirect:/login?error=invalidCredentials";
         }
