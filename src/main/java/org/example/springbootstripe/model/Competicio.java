@@ -1,7 +1,16 @@
 package org.example.springbootstripe.model;
 
 import java.time.LocalDate;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "competicions")
@@ -22,7 +31,7 @@ public class Competicio {
     private Integer capacitat;
 
     @Column(name = "capacitat_equip")
-    private Integer capacitatEquip;
+    private Integer capacitatEquip;  // Campo opcional para equipos
 
     @Enumerated(EnumType.STRING)
     @Column(name = "categoria", nullable = false)
@@ -56,64 +65,148 @@ public class Competicio {
     @Column(name = "provincia", nullable = false)
     private String provincia;
 
+    // Nueva propiedad tipus
     @Enumerated(EnumType.STRING)
     @Column(name = "tipus", nullable = false)
-    private Tipus tipus;
+    private Tipus tipus;  // El tipo de inscripción (INDIVIDUAL o EQUIP)
 
-    // Relación con la entidad Usuari (ahora con tipo Usuari)
-    @ManyToOne
-    @JoinColumn(name = "id_usuari", nullable = false)
-    private Usuari usuari; // Cambié Integer por Usuari
+    @Column(name = "id_usuari")
+    private Long idUsuari;
 
-    // Getters y Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
 
-    public String getNom() { return nom; }
-    public void setNom(String nom) { this.nom = nom; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getDescripcio() { return descripcio; }
-    public void setDescripcio(String descripcio) { this.descripcio = descripcio; }
+    public String getNom() {
+        return nom;
+    }
 
-    public Integer getCapacitat() { return capacitat; }
-    public void setCapacitat(Integer capacitat) { this.capacitat = capacitat; }
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
 
-    public Integer getCapacitatEquip() { return capacitatEquip; }
-    public void setCapacitatEquip(Integer capacitatEquip) { this.capacitatEquip = capacitatEquip; }
+    public String getDescripcio() {
+        return descripcio;
+    }
 
-    public Categoria getCategoria() { return categoria; }
-    public void setCategoria(Categoria categoria) { this.categoria = categoria; }
+    public void setDescripcio(String descripcio) {
+        this.descripcio = descripcio;
+    }
 
-    public LocalDate getDataInici() { return dataInici; }
-    public void setDataInici(LocalDate dataInici) { this.dataInici = dataInici; }
+    public Integer getCapacitat() {
+        return capacitat;
+    }
 
-    public LocalDate getDataFi() { return dataFi; }
-    public void setDataFi(LocalDate dataFi) { this.dataFi = dataFi; }
+    public void setCapacitat(Integer capacitat) {
+        this.capacitat = capacitat;
+    }
 
-    public Integer getEdatMin() { return edatMin; }
-    public void setEdatMin(Integer edatMin) { this.edatMin = edatMin; }
+    public Integer getCapacitatEquip() {
+        return capacitatEquip;
+    }
 
-    public Integer getEdatMax() { return edatMax; }
-    public void setEdatMax(Integer edatMax) { this.edatMax = edatMax; }
+    public void setCapacitatEquip(Integer capacitatEquip) {
+        this.capacitatEquip = capacitatEquip;
+    }
 
-    public byte[] getFotoPortada() { return fotoPortada; }
-    public void setFotoPortada(byte[] fotoPortada) { this.fotoPortada = fotoPortada; }
+    public Categoria getCategoria() {
+        return categoria;
+    }
 
-    public Double getPreu() { return preu; }
-    public void setPreu(Double preu) { this.preu = preu; }
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
 
-    public String getUbicacio() { return ubicacio; }
-    public void setUbicacio(String ubicacio) { this.ubicacio = ubicacio; }
+    public LocalDate getDataInici() {
+        return dataInici;
+    }
 
-    public String getPoblacio() { return poblacio; }
-    public void setPoblacio(String poblacio) { this.poblacio = poblacio; }
+    public void setDataInici(LocalDate dataInici) {
+        this.dataInici = dataInici;
+    }
 
-    public String getProvincia() { return provincia; }
-    public void setProvincia(String provincia) { this.provincia = provincia; }
+    public LocalDate getDataFi() {
+        return dataFi;
+    }
 
-    public Tipus getTipus() { return tipus; }
-    public void setTipus(Tipus tipus) { this.tipus = tipus; }
+    public void setDataFi(LocalDate dataFi) {
+        this.dataFi = dataFi;
+    }
 
-    public Usuari getUsuari() { return usuari; }
-    public void setUsuari(Usuari usuari) { this.usuari = usuari; }
+    public Integer getEdatMin() {
+        return edatMin;
+    }
+
+    public void setEdatMin(Integer edatMin) {
+        this.edatMin = edatMin;
+    }
+
+    public Integer getEdatMax() {
+        return edatMax;
+    }
+
+    public void setEdatMax(Integer edatMax) {
+        this.edatMax = edatMax;
+    }
+
+    public byte[] getFotoPortada() {
+        return fotoPortada;
+    }
+
+    public void setFotoPortada(byte[] fotoPortada) {
+        this.fotoPortada = fotoPortada;
+    }
+
+    public Double getPreu() {
+        return preu;
+    }
+
+    public void setPreu(Double preu) {
+        this.preu = preu;
+    }
+
+    public String getUbicacio() {
+        return ubicacio;
+    }
+
+    public void setUbicacio(String ubicacio) {
+        this.ubicacio = ubicacio;
+    }
+
+    public String getPoblacio() {
+        return poblacio;
+    }
+
+    public void setPoblacio(String poblacio) {
+        this.poblacio = poblacio;
+    }
+
+    public String getProvincia() {
+        return provincia;
+    }
+
+    public void setProvincia(String provincia) {
+        this.provincia = provincia;
+    }
+
+    public Tipus getTipus() {
+        return tipus;
+    }
+
+    public void setTipus(Tipus tipus) {
+        this.tipus = tipus;
+    }
+
+    public Long getIdUsuari() {
+        return idUsuari;
+    }
+    public void setIdUsuari(Long idUsuari) {
+        this.idUsuari = idUsuari;
+    }
 }
+
