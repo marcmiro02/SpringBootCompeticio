@@ -9,13 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.example.springbootstripe.dto.CompeticioDTO;
 
 import java.util.Base64;
+import java.util.Map;
 
 
 @Controller
@@ -41,6 +39,12 @@ public class PaymentController {
     public String chargePage(Model model) {
         model.addAttribute("stripePublicKey", API_PUBLIC_KEY);
         return "charge";
+    }
+    @PostMapping("/handle-inscription/{id}")
+    public String handleInscription(@PathVariable Long id, @RequestParam Map<String, String> formData, Model model) {
+        // Save the form data to the model to pass it to the charge page
+        model.addAttribute("formData", formData);
+        return "redirect:/charge/" + id;
     }
 
     /*========== REST APIs for Handling Payments ===================*/
