@@ -78,17 +78,11 @@
             <input type="email" id="email" name="email" required>
             <label for="contrasenya">Contrasenya:</label>
             <input type="password" id="contrasenya" name="contrasenya" required>
-            <label for="id_rol">Rol:</label>
-            <select id="id_rol" name="id_rol" required>
-                <option value="" disabled selected>Select a role</option>
-                <th:block th:each="role : ${roles}">
-                    <option th:value="${role.id}" th:text="${role.nom}"></option>
-                </th:block>
-            </select>
+
             <button type="submit">Register</button>
         </form>
         <div class="login-link">
-            <p>Already have an account? <a href="/login">Log in</a></p>
+            <p>Ja tens compte? <a href="/login">Log in</a></p>
         </div>
     </div>
 </body>

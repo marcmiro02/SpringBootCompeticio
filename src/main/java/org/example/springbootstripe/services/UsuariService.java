@@ -42,4 +42,5 @@ public class UsuariService {
             usuariRepository.deleteById(id);
         }
     }
+
 }
