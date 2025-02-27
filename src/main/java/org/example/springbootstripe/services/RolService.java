@@ -24,11 +24,11 @@ public class RolService {
     }
 
     public Rol getRolById(Long id) {
-        Optional<Rol> rol = rolRepository.findById(id);
+        Optional<Rol> rol = rolRepository.findById(Math.toIntExact(id));
         return rol.orElse(null);
     }
 
-    public Rol updateRol(Long id, Rol updatedRol) {
+    public Rol updateRol(Integer id, Rol updatedRol) {
         if (rolRepository.existsById(id)) {
             updatedRol.setId(id);
             return rolRepository.save(updatedRol);
@@ -36,7 +36,7 @@ public class RolService {
         return null;
     }
 
-    public void deleteRol(Long id) {
+    public void deleteRol(Integer id) {
         if (rolRepository.existsById(id)) {
             rolRepository.deleteById(id);
         }
@@ -45,7 +45,7 @@ public class RolService {
         return rolRepository.findAll();
     }
     public Optional<Rol> findById(Long id) {
-        return rolRepository.findById(id);
+        return rolRepository.findById(Math.toIntExact(id));
     }
 
 }

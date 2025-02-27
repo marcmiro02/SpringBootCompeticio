@@ -34,12 +34,12 @@ public class RolController {
 
     @PutMapping("/api/{id}")
     public ResponseEntity<Rol> updateRol(@PathVariable Long id, @RequestBody Rol rol) {
-        return ResponseEntity.ok(rolService.updateRol(id, rol));
+        return ResponseEntity.ok(rolService.updateRol(Math.toIntExact(id), rol));
     }
 
     @DeleteMapping("/api/{id}")
     public ResponseEntity<Void> deleteRol(@PathVariable Long id) {
-        rolService.deleteRol(id);
+        rolService.deleteRol(Math.toIntExact(id));
         return ResponseEntity.noContent().build();
     }
 

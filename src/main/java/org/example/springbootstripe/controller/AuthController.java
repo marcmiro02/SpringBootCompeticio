@@ -1,5 +1,6 @@
 package org.example.springbootstripe.controller;
 
+import org.example.springbootstripe.model.Rol;
 import org.example.springbootstripe.model.Usuari;
 import org.example.springbootstripe.repository.RolRepository;
 import org.example.springbootstripe.repository.UsuariRepository;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
+import java.util.Optional;
 
 @Controller
 public class AuthController {
@@ -70,6 +73,14 @@ public class AuthController {
             session.setAttribute("nom", usuari.getNom());
             session.setAttribute("cognoms", usuari.getCognoms());
             session.setAttribute("email", usuari.getEmail());
+
+            // Retrieve the role name based on idRol and set it in the session
+            Optional<Rol> optionalRol = rolRepository.findById(usuari.getIdRol());
+            if (optionalRol.isPresent()) {
+                Rol rol = optionalRol.get();
+                session.setAttribute("roleName", rol.getNom());
+            }
+
             return "redirect:competicions/";
         } else {
             return "redirect:/login?error=invalidCredentials";

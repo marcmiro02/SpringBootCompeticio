@@ -10,8 +10,10 @@ public class Equip {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "nom_equip", nullable = false)
+    private String nomEquip;
+    @Column(name = "nom_participant", nullable = false)
+    private String nomParticipant;
 
     @Column(name = "id_equip")
     private Long idEquip;
@@ -27,13 +29,6 @@ public class Equip {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public Long getIdUsuari() {
         return idUsuari;
@@ -48,6 +43,19 @@ public class Equip {
     }
     public void setIdEquip(Long idEquip) {
         this.idEquip = idEquip;
+    }
+
+    public String getNomEquip() {
+        return nomEquip;
+    }
+    public void setNomEquip(String nomEquip) {
+        this.nomEquip = nomEquip;
+    }
+    public String getNomParticipant() {
+        return nomParticipant;
+    }
+    public void setNomParticipant(String nomParticipant) {
+        this.nomParticipant = nomParticipant;
     }
 }
 
