@@ -177,24 +177,30 @@ public class UsuariController {
     public String showCompeticionsPerfil(Model model, HttpSession session) {
         // Obtener el ID del usuario actual de la sesión
         Long userId = (Long) session.getAttribute("userId");
+        String userRol = (String) session.getAttribute("roleName");
+        System.out.println("User Role: " + userRol);
+        if ("ADMIN".equals(userRol)) {
 
-        // Verificar si el ID del usuario está presente en la sesión
-        if (userId != null) {
-            // Obtener las competiciones creadas por el usuario
-            List<Competicio> createdCompeticions = competicioService.getCompeticionsByCreatorId(userId);
+            // Verificar si el ID del usuario está presente en la sesión
+            if (userId != null) {
+                // Obtener las competiciones creadas por el usuario
+                List<Competicio> createdCompeticions = competicioService.getCompeticionsByCreatorId(userId);
 
-            // Obtener las competiciones en las que el usuario está registrado
-            List<Competicio> registeredCompeticions = competicioService.getCompeticionsByUserId(userId);
+                // Obtener las competiciones en las que el usuario está registrado
+                List<Competicio> registeredCompeticions = competicioService.getCompeticionsByUserId(userId);
 
-            // Agregar las competiciones al modelo
-            model.addAttribute("createdCompeticions", createdCompeticions);
-            model.addAttribute("registeredCompeticions", registeredCompeticions);
-        } else {
-            // Manejar el caso en que el usuario no esté logueado
-            return "redirect:/login";
+                // Agregar las competiciones al modelo
+                model.addAttribute("createdCompeticions", createdCompeticions);
+                model.addAttribute("registeredCompeticions", registeredCompeticions);
+            } else {
+                // Manejar el caso en que el usuario no esté logueado
+                return "redirect:/login";
+            }
+
+            return "perfil/competicionsPerfil";
+        }else{
+            return "redirect:/home/";
         }
-
-        return "perfil/competicionsPerfil";
     }
     @GetMapping("/competicionsGestio")
     public String showCompeticionsGestio(Model model, HttpSession session) {
