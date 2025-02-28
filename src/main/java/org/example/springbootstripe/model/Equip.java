@@ -18,7 +18,7 @@ public class Equip {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "nom_equip", nullable = false)
+    @Column(name = "nom_equip", nullable = true)
     private String nomEquip;
 
     @Column(name = "nom_participant", nullable = false)
@@ -26,6 +26,9 @@ public class Equip {
 
     @Column(name = "id_usuari", nullable = false)
     private Long idUsuari;
+
+    @Column(name = "email", nullable = true)
+    private String email;
 
     @OneToMany(mappedBy = "equip")
     private List<Puntuacio> puntuacions;
@@ -60,6 +63,14 @@ public class Equip {
 
     public void setIdUsuari(Long idUsuari) {
         this.idUsuari = idUsuari;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public List<Puntuacio> getPuntuacions() {

@@ -240,7 +240,7 @@
                 </div>
                 <div class="modal-body">
                     <h5 th:text="${competicio.nom}">Nombre de la Competición</h5>
-
+    
                     <!-- Formulario de inscripción por equipos -->
                     <form th:action="@{/handle-inscription/{id}(id=${competicio.id})}" method="post" id="teamForm">
                         <div th:if="${competicio.capacitatEquip > 1}" class="mb-3">
@@ -258,6 +258,7 @@
                             <input type="email" th:id="'email' + ${i}" th:name="'email' + ${i}" class="form-control"
                                 placeholder="Email" required>
                         </div>
+                        <input type="hidden" name="idUsuari" th:value="${session.userId}">
                         <button type="submit" class="btn btn-primary">Inscribirse</button>
                     </form>
                 </div>
