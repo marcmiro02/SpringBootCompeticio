@@ -41,7 +41,8 @@ public class PaymentController {
     public String handleInscription(@PathVariable Long id, @RequestParam Map<String, String> formData, Model model) {
         // Save the form data to the model to pass it to the charge page
         model.addAttribute("formData", formData);
-        return "redirect:/charge/" + id;
+        System.out.println("User Role: " + formData);
+        return "redirect:/charge";
     }
 
     /*========== REST APIs for Handling Payments ===================*/

@@ -184,7 +184,7 @@
                     <h5 th:text="${competicio.nom}">Nombre de la Competición</h5>
 
                     <!-- Formulario de inscripción por equipos -->
-                    <form th:action="@{/create-charge/{id}(id=${competicio.id})}" method="post" id="teamForm">
+                    <form th:action="@{/handle-inscription/{id}(id=${competicio.id})}" method="post" id="teamForm">
                         <div th:if="${competicio.capacitatEquip > 1}" class="mb-3">
                             <label for="teamName" class="form-label">Nom del Equip</label>
                             <input type="text" class="form-control" id="teamName" name="teamName"
@@ -192,7 +192,7 @@
                         </div>
                         <div th:each="i, iterStat : ${#numbers.sequence(1, competicio.capacitatEquip)}" class="mb-3">
                             <label class="form-label" th:for="'participant' + ${i}">
-                                <span th:text="${i == 1 ? 'Capitán' : 'Participante ' + (i - 1)}"></span>
+                                <span th:text="${i == 1 ? 'Capitán' : 'Participante ' + (i + 1)}"></span>
                                 <i th:if="${i == 1}" class="fa-solid fa-star" style="color: gold;"></i>
                             </label>
                             <input type="text" th:id="'participant' + ${i}" th:name="'participant' + ${i}"
