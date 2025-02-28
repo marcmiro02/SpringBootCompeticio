@@ -80,12 +80,7 @@ public class CompeticioController {
         return ResponseEntity.ok(competicioService.updateCompeticio(id, competicio));
     }
 
-    // API Endpoint para eliminar una competicion
-    @DeleteMapping("/api/{id}")
-    public ResponseEntity<Void> deleteCompeticio(@PathVariable Long id) {
-        competicioService.deleteCompeticio(id);
-        return ResponseEntity.noContent().build();
-    }
+
 
     // Mostrar formulario para crear una nueva competicion
     @GetMapping("/create")
@@ -379,4 +374,10 @@ public class CompeticioController {
     
         return "redirect:/competicions/" + id;
     }
+    @GetMapping("/delete/{id}")
+    public String deleteUsuari(@PathVariable Long id) {
+        competicioService.deleteCompeticio(id);
+        return "redirect:/usuaris/competicionsGestio";
+    }
+
 }

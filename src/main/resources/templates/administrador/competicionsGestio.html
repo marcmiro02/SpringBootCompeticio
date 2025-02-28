@@ -15,7 +15,6 @@
         h1 {
             font-size: 2.5rem;
             font-weight: bold;
-            color: #343a40;
             margin-bottom: 2rem;
             text-align: center;
             position: relative;
@@ -106,6 +105,12 @@
             background-color: #c82333;
             transform: translateY(-3px);
         }
+        .card-img-top {
+            width: 100px; /* Set the desired width */
+            height: 100px; /* Set the desired height */
+            object-fit: cover; /* Ensure the image covers the area without distortion */
+            margin: 0 auto; /* Center the image horizontally */
+        }
     </style>
 </head>
 <body class="bg-light">
@@ -116,21 +121,21 @@
 <div class="container mt-5">
     <h1 class="text-center mb-5">🏆 Gestió de Competicions</h1>
 
-    <!-- Botón para crear una nueva competición -->
+    <!-- Botón para crear una nueva competició -->
     <div class="text-end mb-4">
         <a th:href="@{/competicions/create}" class="btn btn-primary">➕ Crear nova competició</a>
     </div>
 
-    <!-- Lista de competiciones -->
+    <!-- Lista de competicions -->
     <div class="row">
         <div th:each="competicio : ${competitions}" class="col-sm-6 col-md-4 col-lg-3 mb-4">
             <div class="card shadow-sm">
-                <img th:src="@{${competicio.imatge}}" class="card-img-top" alt="Competition Image">
+                <img th:src="@{${competicio.fotoPortada}}" class="card-img-top" alt="Competition Image">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${competicio.nom}">Competition Name</h5>
                     <p class="card-text">
-                        <strong>Data:</strong> <span th:text="${competicio.data}">Date</span><br>
-                        <strong>Lloc:</strong> <span th:text="${competicio.lloc}">Location</span><br>
+                        <strong>Data:</strong> <span th:text="${competicio.dataInici}">Date</span><br>
+                        <strong>Data:</strong> <span th:text="${competicio.dataFi}">Date</span><br>
                         <strong>Descripció:</strong> <span th:text="${competicio.descripcio}">Description</span>
                     </p>
                     <a th:href="@{/competicions/edit/{id}(id=${competicio.id})}" class="btn btn-edit">✏️ Editar</a>

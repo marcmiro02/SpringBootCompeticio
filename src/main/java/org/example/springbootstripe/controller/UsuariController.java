@@ -220,7 +220,7 @@ public class UsuariController {
                 return dto;
             }).collect(Collectors.toList());
 
-            model.addAttribute("competicions", competicionsDTO);
+            model.addAttribute("competitions", competicionsDTO);
             model.addAttribute("isPastEvents", false);
             return "administrador/competicionsGestio";
         } else {
