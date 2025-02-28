@@ -1,9 +1,9 @@
 package org.example.springbootstripe.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.example.springbootstripe.model.Rol;
 import org.example.springbootstripe.services.RolService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,30 +17,17 @@ public class RolController {
     @Autowired
     private RolService rolService;
 
-    @PostMapping("/api")
-    public ResponseEntity<Rol> createRol(@RequestBody Rol rol) {
-        return ResponseEntity.ok(rolService.saveRol(rol));
-    }
+    @GetMapping("/gestio")
+    public String getAllRols(Model model, HttpSession session) {
+        String userRol = (String) session.getAttribute("roleName");
+        if ("ADMIN".equals(userRol)) {
+            List<Rol> roles = rolService.getAllRols();
+            model.addAttribute("roles", roles);
+            return "/administrador/gestioRols";
+        }else{
+            return "redirect:/home";
+        }
 
-    @GetMapping("/api")
-    public ResponseEntity<List<Rol>> getAllRols() {
-        return ResponseEntity.ok(rolService.getAllRols());
-    }
-
-    @GetMapping("/api/{id}")
-    public ResponseEntity<Rol> getRolById(@PathVariable Long id) {
-        return ResponseEntity.ok(rolService.getRolById(id));
-    }
-
-    @PutMapping("/api/{id}")
-    public ResponseEntity<Rol> updateRol(@PathVariable Long id, @RequestBody Rol rol) {
-        return ResponseEntity.ok(rolService.updateRol(Math.toIntExact(id), rol));
-    }
-
-    @DeleteMapping("/api/{id}")
-    public ResponseEntity<Void> deleteRol(@PathVariable Long id) {
-        rolService.deleteRol(Math.toIntExact(id));
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/create")
@@ -54,6 +41,27 @@ public class RolController {
         Rol rol = new Rol();
         rol.setNom(name);
         rolService.saveRol(rol);
-        return "redirect:/rols";
+        return "redirect:/rols/gestio";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        Rol rol = rolService.getRolById(id);
+        model.addAttribute("rol", rol);
+        return "administrador/editRol";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String updateRol(@PathVariable Long id, @RequestParam("name") String name) {
+        Rol rol = rolService.getRolById(id);
+        rol.setNom(name);
+        rolService.updateRol(Math.toIntExact(id), rol);
+        return "redirect:/rols/gestio";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteRol(@PathVariable Long id) {
+        rolService.deleteRol(Math.toIntExact(id));
+        return "redirect:/rols/gestio";
     }
 }
