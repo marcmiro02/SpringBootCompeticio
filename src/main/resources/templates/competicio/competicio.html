@@ -201,6 +201,19 @@
                                         <input type="date" class="form-control" id="dataFi" name="dataFi" th:value="${competicio.dataFi}" required>
                                     </div>
                                     <div class="mb-3">
+                                        <label for="provincia" class="form-label">Provincia:</label>
+                                        <select id="provincia" name="provincia" class="form-select" onchange="loadCities(this.value)" required>
+                                            <option value="">Seleccione una provincia</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="poblacio" class="form-label">Ciudad:</label>
+                                        <select id="poblacio" name="poblacio" class="form-select" required>
+                                            <option value="">Seleccione una ciudad</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
                                         <label for="preu" class="form-label">Preu:</label>
                                         <input type="number" class="form-control" id="preu" name="preu" th:value="${competicio.preu}" required>
                                     </div>
@@ -259,6 +272,78 @@
         $(document).ready(function () {
             $('#puntuacionsTable').DataTable();
         });
+    </script>
+
+    <script>
+        // Función para cargar provincias
+        function loadProvinces() {
+            fetch('/api/provincias') // Asegúrate de que la URL sea correcta
+                    .then(response => response.json())
+                    .then(data => {
+                    const provinciaSelect = document.getElementById('provincia');
+                    provinciaSelect.innerHTML = '<option value="">Seleccione una provincia</option>';
+                    data.forEach(provincia => {
+                        const option = document.createElement('option');
+                        option.value = provincia.id; // Usamos el ID de la provincia
+                        option.textContent = provincia.nombre; // Mostramos el nombre de la provincia
+                        provinciaSelect.appendChild(option);
+                    });
+                    })
+                    .catch(error => {
+                    console.error('Error al cargar provincias:', error);
+                    });
+        }
+        
+        // Función para cargar ciudades por el ID de la provincia
+        function loadCities(provinciaId) {
+            if (!provinciaId) return; // Si no hay provincia seleccionada, no hacemos nada
+            fetch(`/api/ciudades?provinciaId=${provinciaId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                    const ciudadesSelect = document.getElementById('poblacio');
+                    ciudadesSelect.innerHTML = '<option value="">Seleccione una ciudad</option>';
+                    data.forEach(ciudad => {
+                        const option = document.createElement('option');
+                        option.value = ciudad.id; // Enviar el ID de la ciudad
+                        option.textContent = ciudad.nombre; // Mostrar el nombre de la ciudad
+                        ciudadesSelect.appendChild(option);
+                    });
+                    })
+                    .catch(error => {
+                    console.error('Error al cargar ciudades:', error);
+                    });
+        }
+        
+        document.querySelector('form').addEventListener('submit', function (event) {
+            var provinciaSelect = document.getElementById('provincia');
+            var poblacioSelect = document.getElementById('poblacio');
+            const capacitatEquipInput = document.getElementById("capacitat_equip");
+        
+            // Obtener el texto (nombre) de la provincia y ciudad seleccionadas
+            var provinciaNombre = provinciaSelect.options[provinciaSelect.selectedIndex].text;
+            var ciudadNombre = poblacioSelect.options[poblacioSelect.selectedIndex].text;
+            if (capacitatEquipInput.value === '') {
+            capacitatEquipInput.value = 1; // Ensure value is set before submission
+            }
+            // Establecer los valores de los campos hidden para enviar los nombres en lugar de los IDs
+            var provinciaHidden = document.createElement('input');
+            provinciaHidden.type = 'hidden';
+            provinciaHidden.name = 'provincia_nombre'; // Campo para el nombre de la provincia
+            provinciaHidden.value = provinciaNombre;
+            this.appendChild(provinciaHidden);
+        
+            var ciudadHidden = document.createElement('input');
+            ciudadHidden.type = 'hidden';
+            ciudadHidden.name = 'ciudad_nombre'; // Campo para el nombre de la ciudad
+            ciudadHidden.value = ciudadNombre;
+            this.appendChild(ciudadHidden);
+        });
+        
+        // Cargar provincias cuando la página se carga
+        document.addEventListener('DOMContentLoaded', function () {
+            loadProvinces();
+        });
+          
     </script>
 
 </body>
