@@ -14,13 +14,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("/home")
+@RequestMapping("/")
 public class HomeController {
 
     @Autowired
     private CompeticioService competicioService;
 
-    @GetMapping("/home")
+    @GetMapping("/")
     public String home(Model model) {
         List<Competicio> latestCompeticions = competicioService.getLatestCompeticions();
 
