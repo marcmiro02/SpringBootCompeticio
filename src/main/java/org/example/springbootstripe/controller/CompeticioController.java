@@ -403,4 +403,5 @@ public class CompeticioController {
 
         return "redirect:/competicions/" + id;
     }
+
 }

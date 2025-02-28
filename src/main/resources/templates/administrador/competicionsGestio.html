@@ -138,7 +138,7 @@
                         <strong>Data:</strong> <span th:text="${competicio.dataFi}">Date</span><br>
                         <strong>Descripció:</strong> <span th:text="${competicio.descripcio}">Description</span>
                     </p>
-                    <a th:href="@{/competicions/edit/{id}(id=${competicio.id})}" class="btn btn-edit">✏️ Editar</a>
+                    <a th:href="@{/competicions/{id}(id=${competicio.id})}" class="btn btn-edit">Veure</a>
                     <a th:href="@{'/competicions/delete/' + ${competicio.id}}" th:tutorialTitle="${competicio.nom}" id="btnDelete"
                        title="Elimina la competició" class="fa-regular fa-trash-can icon-dark btn-delete"></a>
                 </div>
