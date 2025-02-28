@@ -14,7 +14,6 @@ import org.example.springbootstripe.model.Equip;
 import org.example.springbootstripe.model.Puntuacio;
 import org.example.springbootstripe.model.Tipus;
 import org.example.springbootstripe.model.Usuari;
-import org.example.springbootstripe.repository.UsuariRepository;
 import org.example.springbootstripe.services.CompeticioService;
 import org.example.springbootstripe.services.EquipService;
 import org.example.springbootstripe.services.PuntuacioService;
@@ -24,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -374,10 +372,33 @@ public class CompeticioController {
     
         return "redirect:/competicions/" + id;
     }
+    
     @GetMapping("/delete/{id}")
     public String deleteUsuari(@PathVariable Long id) {
         competicioService.deleteCompeticio(id);
         return "redirect:/usuaris/competicionsGestio";
     }
 
+    @PostMapping("/editCompeticio/{id}")
+    public String editCompeticio(@PathVariable Long id,
+                                @RequestParam("nom") String nom,
+                                @RequestParam("descripcio") String descripcio,
+                                @RequestParam("dataInici") String dataInici,
+                                @RequestParam("dataFi") String dataFi,
+                                @RequestParam("preu") Double preu) {
+        Competicio competicio = competicioService.getCompeticioById(id);
+        if (competicio == null) {
+            return "redirect:/competicions/all";
+        }
+
+        competicio.setNom(nom);
+        competicio.setDescripcio(descripcio);
+        competicio.setDataInici(LocalDate.parse(dataInici));
+        competicio.setDataFi(LocalDate.parse(dataFi));
+        competicio.setPreu(preu);
+
+        competicioService.saveCompeticio(competicio);
+
+        return "redirect:/competicions/" + id;
+    }
 }
