@@ -75,6 +75,14 @@
 
                 <p class="card-text" th:text="${competicio.descripcio}"></p>
 
+                          
+                <!-- Botó per editar les dades de la competició si l'usuari és ADMIN -->
+                <div th:if="${session.roleName == 'ADMIN'}">
+                    <a href="#" class="btn btn-warning mt-3" data-bs-toggle="modal" data-bs-target="#editCompeticioModal">
+                        Editar Dades de la Competició
+                    </a>
+                </div>
+                
                 <!-- Botón de inscripción con verificación de sesión -->
                 <div th:if="${isBeforeStart}">
                     <a href="#" th:if="${currentUser != null}" class="btn btn-success mt-3" data-bs-toggle="modal"
@@ -145,7 +153,7 @@
                     </div>
                 </div>
                 
-                                <!-- Modal per editar puntuació -->
+                <!-- Modal per editar puntuació -->
                 <div class="modal fade" id="editPuntuacioModal" tabindex="-1" aria-labelledby="editPuntuacioModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -165,7 +173,44 @@
                         </div>
                     </div>
                 </div>
-                <br><br>
+                
+                <!-- Modal per editar les dades de la competició -->
+                <div class="modal fade" id="editCompeticioModal" tabindex="-1" aria-labelledby="editCompeticioModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editCompeticioModalLabel">Editar Dades de la Competició</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form th:action="@{/competicions/editCompeticio/{id}(id=${competicio.id})}" method="post">
+                                    <div class="mb-3">
+                                        <label for="nom" class="form-label">Nom:</label>
+                                        <input type="text" class="form-control" id="nom" name="nom" th:value="${competicio.nom}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="descripcio" class="form-label">Descripció:</label>
+                                        <textarea class="form-control" id="descripcio" name="descripcio" required th:text="${competicio.descripcio}"></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="dataInici" class="form-label">Data d'Inici:</label>
+                                        <input type="date" class="form-control" id="dataInici" name="dataInici" th:value="${competicio.dataInici}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="dataFi" class="form-label">Data de Fi:</label>
+                                        <input type="date" class="form-control" id="dataFi" name="dataFi" th:value="${competicio.dataFi}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="preu" class="form-label">Preu:</label>
+                                        <input type="number" class="form-control" id="preu" name="preu" th:value="${competicio.preu}" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br><br>                
                 <a href="/competicions/all" class="btn btn-primary">Volver</a>
             </div>
         </div>
