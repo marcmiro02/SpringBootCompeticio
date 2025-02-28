@@ -54,11 +54,16 @@ public class PaymentController {
         model.addAttribute("formData", formData);
         model.addAttribute("competicioId", id);
         System.out.println("User Role: " + formData);
-        return "redirect:/checkout/" + id + "?email=" + formData.get("email1");
+        StringBuilder url = new StringBuilder("redirect:/checkout/" + id + "?email=" + formData.get("email1"));
+        url.append("&participant=").append(formData.get("participant1"));
+        url.append("&usuariId=").append(formData.get("idUsuari"));
+        url.append("&teamName=").append(formData.get("teamName"));
+
+        return url.toString();
     }
 
     @GetMapping("/checkout/{id}")
-    public String checkout(@PathVariable Long id, Model model, @RequestParam String email) {
+    public String checkout(@PathVariable Long id, Model model, @RequestParam String email, @RequestParam Map<String, String> formData) {
         Competicio competicio = competicioService.getCompeticioById(id);
         if (competicio == null) {
             return "redirect:/error?message=Competition+not+found";
@@ -85,6 +90,9 @@ public class PaymentController {
         model.addAttribute("competicio", competicioDTO);
         model.addAttribute("stripePublicKey", API_PUBLIC_KEY);
         model.addAttribute("email", email);
+        model.addAttribute("formData", formData);
+        System.out.println("Usere: " + formData);
+
 
         return "charge"; // Cargar la vista de pago
     }
@@ -109,7 +117,7 @@ public class PaymentController {
         boolean isTeam = competicio.getCapacitatEquip() > 1;
         Equip equip = new Equip();
         if (isTeam) {
-            equip.setNomEquip(formData.get("teamName"));
+            equip.setNomEquip(formData.get("nomEquip"));
             equip.setNomParticipant(formData.get("participant1"));
             equip.setIdUsuari(parseLongOrDefault(formData.get("idUsuari"), -1L));
             equip.setEmail(email);
