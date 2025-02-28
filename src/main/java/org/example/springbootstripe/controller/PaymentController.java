@@ -44,11 +44,11 @@ public class PaymentController {
         model.addAttribute("formData", formData);
         model.addAttribute("competicioId", id);
         System.out.println("User Role: " + formData);
-        return "redirect:/checkout/" + id;
+        return "redirect:/checkout/" + id + "?email=" + formData.get("email1");
     }
 
     @GetMapping("/checkout/{id}")
-    public String checkout(@PathVariable Long id, Model model) {
+    public String checkout(@PathVariable Long id, Model model, @RequestParam String email) {
         Competicio competicio = competicioService.getCompeticioById(id);
         if (competicio == null) {
             return "redirect:/error?message=Competition+not+found";
@@ -74,6 +74,7 @@ public class PaymentController {
 
         model.addAttribute("competicio", competicioDTO);
         model.addAttribute("stripePublicKey", API_PUBLIC_KEY);
+        model.addAttribute("email", email);
 
         return "charge"; // Cargar la vista de pago
     }
