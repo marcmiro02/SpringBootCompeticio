@@ -72,10 +72,18 @@
                     <i class="fa-solid fa-coins" style="color: #FFD43B;"></i>
                     <span th:text="${competicio.preu}"></span><br>
                 </p>
+                <p class="card-text">
+                    <i class="fa-solid fa-users" style="color: #007bff;"></i>
+                    <span th:text="${competicio.tipus}"></span><br>
+                </p>
+
+                <p class="card-text">
+                    <i class="fa-solid fa-trophy" style="color: #007bff;"></i>
+                    <span th:text="${competicio.categoria}"></span><br>
+                </p>
 
                 <p class="card-text" th:text="${competicio.descripcio}"></p>
 
-                          
                 <!-- Botó per editar les dades de la competició si l'usuari és ADMIN -->
                 <div th:if="${session.roleName == 'ADMIN'}">
                     <a href="#" class="btn btn-warning mt-3" data-bs-toggle="modal" data-bs-target="#editCompeticioModal">
