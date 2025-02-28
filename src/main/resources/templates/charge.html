@@ -65,16 +65,22 @@
     function stripeTokenHandler(token) {
         var form = document.getElementById('payment-form');
 
-        // Crea un formulario oculto con el token para enviarlo a tu servidor
+        console.log("Form:", form); // Debug
+
         var hiddenInput = document.createElement('input');
         hiddenInput.setAttribute('type', 'hidden');
         hiddenInput.setAttribute('name', 'stripeToken');
         hiddenInput.setAttribute('value', token.id);
         form.appendChild(hiddenInput);
 
-        // Enviar el formulario
-        form.submit();
+        if (typeof form.submit === "function") {
+            form.submit();
+        } else {
+            console.warn("Método submit no disponible, usando llamada forzada.");
+            HTMLFormElement.prototype.submit.call(form);
+        }
     }
+
 </script>
 
 </body>

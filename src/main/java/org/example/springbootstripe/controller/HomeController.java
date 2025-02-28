@@ -20,7 +20,7 @@ public class HomeController {
     @Autowired
     private CompeticioService competicioService;
 
-    @GetMapping("/")
+    @GetMapping("/home")
     public String home(Model model) {
         List<Competicio> latestCompeticions = competicioService.getLatestCompeticions();
 
