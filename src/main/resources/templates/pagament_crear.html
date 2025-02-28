@@ -5,16 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pago con Stripe</title>
     <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .payment-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        #checkout-button {
+            background-color: #6772e5;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #checkout-button:hover {
+            background-color: #5c67d1;
+        }
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
 </head>
 <body>
-<h2>Realizar pago</h2>
-<p>Precio: €<span id="preu"></span></p>
-<button id="checkout-button">Pagar</button>
+<div class="payment-container">
+    <h2>Realizar pago</h2>
+    <p>Precio: €<span id="preu"></span></p>
+    <button id="checkout-button">Pagar</button>
+    <p class="error-message" id="error-message">Ha ocurrido un error. Redirigiendo...</p>
+</div>
 
 <script>
-    document.getElementById("preu").textContent = new URLSearchParams(window.location.search).get("preu");
+    // Obtener el precio desde los parámetros de la URL
+    const preuElement = document.getElementById("preu");
+    const preu = new URLSearchParams(window.location.search).get("preu");
+    if (preu) {
+        preuElement.textContent = preu;
+    } else {
+        preuElement.textContent = "0";
+    }
+
+    const stripe = Stripe('pk_test_51QWan1DQSLCEGDSPbhDIz8jG5ZxmBai6RpMF3vBKtmGuo33UIA6PiQZ2tn4g09iR6cXm0zi4CYJEDQ4GsrsSdwXg00jbBvMMQo'); // Reemplaza 'TU_PUBLIC_KEY' con tu clave pública de Stripe
 
     document.getElementById("checkout-button").addEventListener("click", function () {
+        const errorMessage = document.getElementById("error-message");
+
         fetch("/stripe/create-checkout-session?id_competicio=" + new URLSearchParams(window.location.search).get("id_competicio"), {
             method: "POST",
             headers: { "Content-Type": "application/json" }
@@ -23,7 +86,15 @@
             .then(session => {
                 return stripe.redirectToCheckout({ sessionId: session.id });
             })
-            .catch(error => console.error("Error:", error));
+            .catch(error => {
+                console.error("Error:", error);
+                errorMessage.style.display = "block";
+
+                // Redirigir al usuario a /competicions/all después de 3 segundos
+                setTimeout(() => {
+                    window.location.href = "/competicions/all";
+                }, 3000);
+            });
     });
 </script>
 </body>
