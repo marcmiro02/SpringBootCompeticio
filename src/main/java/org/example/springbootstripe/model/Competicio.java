@@ -31,7 +31,7 @@ public class Competicio {
     private Integer capacitat;
 
     @Column(name = "capacitat_equip")
-    private Integer capacitatEquip;  // Campo opcional para equipos
+    private Integer capacitatEquip; // Campo opcional para equipos
 
     @Enumerated(EnumType.STRING)
     @Column(name = "categoria", nullable = false)
@@ -68,7 +68,7 @@ public class Competicio {
     // Nueva propiedad tipus
     @Enumerated(EnumType.STRING)
     @Column(name = "tipus", nullable = false)
-    private Tipus tipus;  // El tipo de inscripción (INDIVIDUAL o EQUIP)
+    private Tipus tipus; // El tipo de inscripción (INDIVIDUAL o EQUIP)
 
     @Column(name = "id_usuari")
     private Long idUsuari;
@@ -205,8 +205,8 @@ public class Competicio {
     public Long getIdUsuari() {
         return idUsuari;
     }
+
     public void setIdUsuari(Long idUsuari) {
         this.idUsuari = idUsuari;
     }
 }
-
