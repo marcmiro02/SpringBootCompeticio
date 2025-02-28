@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Competición</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #343a40;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      position: relative;
+    }
+
+    h1::after {
+      content: '';
+      display: block;
+      width: 60%;
+      height: 4px;
+      background: linear-gradient(90deg, #007bff, #00bfff);
+      margin: 10px auto 0;
+      border-radius: 2px;
+    }
+
+    .card {
+      transition: transform 0.3s, box-shadow 0.3s;
+      border: none;
+      border-radius: 15px;
+      overflow: hidden;
+      background: #ffffff;
+      position: relative;
+      margin-top: 2rem;
+    }
+
+    .card-body {
+      position: relative;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 2rem;
+    }
+
+    .form-label {
+      font-weight: bold;
+      color: #343a40;
+    }
+
+    .form-control, .form-select {
+      border-radius: 10px;
+      border: 1px solid #ced4da;
+      padding: 0.75rem 1rem;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      width: 100%;
+    }
+    .form-control:focus, .form-select:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 25px;
+      transition: background-color 0.3s, transform 0.3s;
+      width: 100%;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      background-color: #0056b3;
+      transform: translateY(-3px);
+    }
+
+    .fa-calendar-days {
+      color: #007bff;
+      margin-right: 8px;
+    }
+
+    .container {
+      max-width: 900px;
+      padding: 2rem;
+      margin: 0 auto;
+    }
+
+    .form-check-input {
+      margin-top: 0.3rem;
+    }
+
+    .mb-3 {
+      margin-bottom: 1.5rem;
+    }
+
+    #capacidadEquip {
+      display: none;
+    }
+
+    .d-grid {
+      margin-top: 2rem;
+    }
+
+    .card-body h2 {
+      font-size: 1.5rem;
+      margin-top: 1.5rem;
+      color: #343a40;
+    }
+  </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="container">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h1 class="text-center mb-4">✏️ Editar Competición</h1>
+      <form action="/competicions/edit" method="post" enctype="multipart/form-data">
+        <!-- Campo ID -->
+        <input type="hidden" name="id" th:value="${competicion.id}" />
+
+        <!-- Campos principales -->
+        <div class="mb-3">
+          <label for="name" class="form-label">Nombre de la Competición:</label>
+          <input type="text" id="name" name="name" class="form-control" th:value="${competicion.name}" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="descripcio" class="form-label">Descripción:</label>
+          <textarea id="descripcio" name="descripcio" class="form-control" rows="3" required th:text="${competicion.descripcio}"></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="tipus" class="form-label">Tipus:</label>
+          <select id="tipus" name="tipus" class="form-select" required onchange="toggleCapacidadEquip()">
+            <option value="" disabled selected>Seleccione un tipus</option>
+            <th:block th:each="tipus : ${tipusList}">
+              <option th:value="${tipus.name()}" th:text="${tipus.name()}" th:selected="${competicion.tipus == tipus.name()}"></option>
+            </th:block>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="categoria" class="form-label">Categoría:</label>
+          <select id="categoria" name="categoria" class="form-select" required>
+            <option value="" disabled selected>Seleccione una categoría</option>
+            <th:block th:each="categoria : ${categories}">
+              <option th:value="${categoria.name()}" th:text="${categoria.name()}" th:selected="${competicion.categoria == categoria.name()}"></option>
+            </th:block>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="capacitat" class="form-label">Capacidad:</label>
+          <input type="number" id="capacitat" name="capacitat" class="form-control" th:value="${competicion.capacitat}" required>
+        </div>
+
+        <!-- Campo para la capacidad del equipo (oculto por defecto) -->
+        <div id="capacidadEquip" class="mb-3" th:style="${competicion.tipus == 'EQUIPS' ? 'display: block' : 'display: none'}">
+          <label for="capacitat_equip" class="form-label">Capacidad del Equipo:</label>
+          <input type="number" id="capacitat_equip" name="capacitat_equip" class="form-control" th:value="${competicion.capacitatEquip}" min="1">
+        </div>
+
+        <div class="mb-3">
+          <label for="dataInici" class="form-label">Fecha de Inicio:</label>
+          <input type="date" id="dataInici" name="dataInici" class="form-control" th:value="${competicion.dataInici}" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="dataFi" class="form-label">Fecha de Fin:</label>
+          <input type="date" id="dataFi" name="dataFi" class="form-control" th:value="${competicion.dataFi}" required>
+        </div>
+
+        <!-- Campo para la imagen de portada -->
+        <div class="mb-3">
+          <label for="foto_portada" class="form-label">Imagen de Portada:</label>
+          <input type="file" id="foto_portada" name="foto_portada" class="form-control" accept="image/*">
+          <small class="form-text text-muted">Deje en blanco para mantener la imagen actual.</small>
+        </div>
+
+        <!-- Nuevos campos -->
+        <div class="mb-3">
+          <label for="preu" class="form-label">Precio:</label>
+          <input type="number" step="0.01" id="preu" name="preu" class="form-control" th:value="${competicion.preu}" required>
+        </div>
+
+        <!-- Selección de provincia -->
+        <div class="mb-3">
+          <label for="provincia" class="form-label">Provincia:</label>
+          <select id="provincia" name="provincia" class="form-select" onchange="loadCities(this.value)" required>
+            <option value="">Seleccione una provincia</option>
+            <th:block th:each="provincia : ${provincias}">
+              <option th:value="${provincia.id}" th:text="${provincia.nombre}" th:selected="${competicion.provincia.id == provincia.id}"></option>
+            </th:block>
+          </select>
+        </div>
+
+        <!-- Selección de ciudad -->
+        <div class="mb-3">
+          <label for="poblacio" class="form-label">Ciudad:</label>
+          <select id="poblacio" name="poblacio" class="form-select" required>
+            <option value="">Seleccione una ciudad</option>
+            <th:block th:each="ciudad : ${ciudades}">
+              <option th:value="${ciudad.id}" th:text="${ciudad.nombre}" th:selected="${competicion.poblacio.id == ciudad.id}"></option>
+            </th:block>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="ubicacio" class="form-label">Ubicación:</label>
+          <input type="text" id="ubicacio" name="ubicacio" class="form-control" th:value="${competicion.ubicacio}">
+        </div>
+
+        <!-- Campo adicional de observaciones -->
+        <div class="mb-3">
+          <label for="observacions" class="form-label">Observaciones:</label>
+          <textarea id="observacions" name="observacions" class="form-control" rows="3" th:text="${competicion.observacions}"></textarea>
+        </div>
+
+        <!-- Requisitos -->
+        <h2 class="h5 mt-4">Requisitos</h2>
+
+        <div class="form-check mb-3">
+          <input type="checkbox" id="edadMinCheck" name="edadMinCheck" class="form-check-input" th:checked="${competicion.edadMinCheck}" onclick="toggleEdadMinInput()">
+          <label for="edadMinCheck" class="form-check-label">Edad Mínima</label>
+        </div>
+
+        <div id="edadMinInput" class="mb-3" th:style="${competicion.edadMinCheck ? 'display: block' : 'display: none'}">
+          <label for="edat_min" class="form-label">Edad Mínima:</label>
+          <input type="number" id="edat_min" name="edat_min" class="form-control" th:value="${competicion.edatMin}">
+        </div>
+
+        <div class="form-check mb-3">
+          <input type="checkbox" id="edadMaxCheck" name="edadMaxCheck" class="form-check-input" th:checked="${competicion.edadMaxCheck}" onclick="toggleEdadMaxInput()">
+          <label for="edadMaxCheck" class="form-check-label">Edad Máxima</label>
+        </div>
+
+        <div id="edadMaxInput" class="mb-3" th:style="${competicion.edadMaxCheck ? 'display: block' : 'display: none'}">
+          <label for="edat_max" class="form-label">Edad Máxima:</label>
+          <input type="number" id="edat_max" name="edat_max" class="form-control" th:value="${competicion.edatMax}">
+        </div>
+
+        <div class="d-grid gap-2">
+          <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Función para cargar provincias
+  function loadProvinces() {
+    fetch('/api/provincias') // Asegúrate de que la URL sea correcta
+            .then(response => response.json())
+            .then(data => {
+              const provinciaSelect = document.getElementById('provincia');
+              provinciaSelect.innerHTML = '<option value="">Seleccione una provincia</option>';
+              data.forEach(provincia => {
+                const option = document.createElement('option');
+                option.value = provincia.id; // Usamos el ID de la provincia
+                option.textContent = provincia.nombre; // Mostramos el nombre de la provincia
+                provinciaSelect.appendChild(option);
+              });
+            })
+            .catch(error => {
+              console.error('Error al cargar provincias:', error);
+            });
+  }
+
+  // Función para cargar ciudades por el ID de la provincia
+  function loadCities(provinciaId) {
+    if (!provinciaId) return; // Si no hay provincia seleccionada, no hacemos nada
+    fetch(`/api/ciudades?provinciaId=${provinciaId}`)
+            .then(response => response.json())
+            .then(data => {
+              const ciudadesSelect = document.getElementById('poblacio');
+              ciudadesSelect.innerHTML = '<option value="">Seleccione una ciudad</option>';
+              data.forEach(ciudad => {
+                const option = document.createElement('option');
+                option.value = ciudad.id; // Enviar el ID de la ciudad
+                option.textContent = ciudad.nombre; // Mostrar el nombre de la ciudad
+                ciudadesSelect.appendChild(option);
+              });
+            })
+            .catch(error => {
+              console.error('Error al cargar ciudades:', error);
+            });
+  }
+
+  document.querySelector('form').addEventListener('submit', function (event) {
+    var provinciaSelect = document.getElementById('provincia');
+    var poblacioSelect = document.getElementById('poblacio');
+    const capacitatEquipInput = document.getElementById("capacitat_equip");
+
+    // Obtener el texto (nombre) de la provincia y ciudad seleccionadas
+    var provinciaNombre = provinciaSelect.options[provinciaSelect.selectedIndex].text;
+    var ciudadNombre = poblacioSelect.options[poblacioSelect.selectedIndex].text;
+    if (capacitatEquipInput.value === '') {
+      capacitatEquipInput.value = 1; // Ensure value is set before submission
+    }
+    // Establecer los valores de los campos hidden para enviar los nombres en lugar de los IDs
+    var provinciaHidden = document.createElement('input');
+    provinciaHidden.type = 'hidden';
+    provinciaHidden.name = 'provincia_nombre'; // Campo para el nombre de la provincia
+    provinciaHidden.value = provinciaNombre;
+    this.appendChild(provinciaHidden);
+
+    var ciudadHidden = document.createElement('input');
+    ciudadHidden.type = 'hidden';
+    ciudadHidden.name = 'ciudad_nombre'; // Campo para el nombre de la ciudad
+    ciudadHidden.value = ciudadNombre;
+    this.appendChild(ciudadHidden);
+  });
+
+  // Cargar provincias cuando la página se carga
+  document.addEventListener('DOMContentLoaded', function () {
+    loadProvinces();
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

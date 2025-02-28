@@ -1,13 +1,12 @@
 package org.example.springbootstripe.services;
 
-import org.example.springbootstripe.model.Usuari;
-import org.example.springbootstripe.repository.UsuariRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
+
+import org.example.springbootstripe.model.Usuari;
+import org.example.springbootstripe.repository.UsuariRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class UsuariService {
@@ -29,9 +28,10 @@ public class UsuariService {
     }
 
     public Usuari updateUsuari(Long id, Usuari updatedUsuari) {
-        if (usuariRepository.existsById(id)) {
+        Optional<Usuari> existingUsuari = usuariRepository.findById(id);
+        if (existingUsuari.isPresent()) {
             updatedUsuari.setId(id);
-            return usuariRepository.save(updatedUsuari);
+            return usuariRepository.save(updatedUsuari); // Guarda los cambios
         }
         return null;
     }
@@ -40,5 +40,9 @@ public class UsuariService {
         if (usuariRepository.existsById(id)) {
             usuariRepository.deleteById(id);
         }
+    }
+
+    public Usuari findByNomUsuari(String username) {
+        return usuariRepository.findByNomUsuari(username);
     }
 }

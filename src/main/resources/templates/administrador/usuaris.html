@@ -122,11 +122,11 @@
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
 <div class="container mt-5">
-  <h1 class="text-center mb-5">👥 User Management</h1>
+  <h1 class="text-center mb-5">👥 Gestio d'usuaris</h1>
 
   <!-- Botón para crear un nuevo usuario -->
   <div class="text-end mb-4">
-    <a th:href="@{/users/new}" class="btn btn-primary">➕ Create New User</a>
+    <a th:href="@{/usuaris/create}" class="btn btn-primary">➕ Crear nou usuari</a>
   </div>
 
   <!-- Lista de usuarios -->
@@ -141,13 +141,13 @@
             <strong>Email:</strong> <span th:text="${user.email}">user@example.com</span><br>
             <strong>Role:</strong> <span th:text="${user.nomRol}">Role</span>
           </p>
-          <a th:href="@{/users/edit/{id}(id=${user.id})}" class="btn btn-edit">✏️ Edit</a>
-          <a th:href="@{/users/delete/{id}(id=${user.id})}" class="btn btn-delete">🗑️ Delete</a>
+          <a th:href="@{/usuaris/edit/{id}(id=${user.id})}" class="btn btn-edit">✏️ Edit</a>
+          <a th:href="@{'/usuaris/delete/' + ${user.id}}" th:tutorialTitle="${user.nom}" id="btnDelete"
+             title="Elimina el usuari" class="fa-regular fa-trash-can icon-dark btn-delete"></a>
         </div>
       </div>
     </div>
   </div>
-</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>

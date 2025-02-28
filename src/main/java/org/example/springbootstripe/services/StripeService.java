@@ -1,15 +1,13 @@
 package org.example.springbootstripe.services;
 
-import com.stripe.Stripe;
-import com.stripe.model.Charge;
-import com.stripe.model.Coupon;
-import com.stripe.model.Customer;
-import com.stripe.model.Subscription;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.stripe.Stripe;
+import com.stripe.model.Charge;
 
 @Service
 public class StripeService {
@@ -49,5 +47,4 @@ public class StripeService {
         }
         return id;
     }
-
-    }
+}

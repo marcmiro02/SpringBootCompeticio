@@ -1,20 +1,22 @@
 package org.example.springbootstripe.controller;
 
+import java.util.Base64;
+import java.util.Map;
+
+import org.example.springbootstripe.dto.CompeticioDTO;
 import org.example.springbootstripe.model.Competicio;
 import org.example.springbootstripe.model.Response;
 import org.example.springbootstripe.services.CompeticioService;
 import org.example.springbootstripe.services.StripeService;
-import com.stripe.model.Coupon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.example.springbootstripe.dto.CompeticioDTO;
-
-import java.util.Base64;
-import java.util.Map;
-
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class PaymentController {
@@ -30,46 +32,20 @@ public class PaymentController {
         this.stripeService = stripeService;
     }
 
-
-
     @GetMapping("/charge")
     public String chargePage(Model model) {
         model.addAttribute("stripePublicKey", API_PUBLIC_KEY);
         return "charge";
     }
+
     @PostMapping("/handle-inscription/{id}")
     public String handleInscription(@PathVariable Long id, @RequestParam Map<String, String> formData, Model model) {
         // Save the form data to the model to pass it to the charge page
         model.addAttribute("formData", formData);
-        return "redirect:/charge/" + id;
+        model.addAttribute("competicioId", id);
+        System.out.println("User Role: " + formData);
+        return "redirect:/checkout/" + id;
     }
-
-    /*========== REST APIs for Handling Payments ===================*/
-    @PostMapping("/create-charge/{id}")
-    public @ResponseBody
-    Response createCharge(String email, String token, @PathVariable Long id, Model model) {
-        Competicio competicio = competicioService.getCompeticioById(id);
-        CompeticioDTO competicioDTO = new CompeticioDTO();
-        competicioDTO.setNom(competicio.getNom());
-        competicioDTO.setPreu(competicio.getPreu());
-        competicioDTO.setDataInici(competicio.getDataInici().toString());
-        competicioDTO.setDataFi(competicio.getDataFi().toString());
-
-        if (competicio.getFotoPortada() != null) {
-            String base64Image = Base64.getEncoder().encodeToString(competicio.getFotoPortada());
-            competicioDTO.setFotoPortada("data:image/jpeg;base64," + base64Image);
-        }
-        model.addAttribute("competicio", competicioDTO);
-        if (token == null) {
-            return new Response(false, "Stripe payment token is missing. Please, try again later.");
-        }
-        String chargeId = stripeService.createCharge(email, token, competicio.getPreu(), competicio.getNom(), competicio.getDataInici().toString(), competicio.getDataFi().toString());
-        if (chargeId == null) {
-            return new Response(false, "An error occurred while trying to create a charge.");
-        }
-        return new Response(true, "Success! Your charge id is " + chargeId);
-    }
-
 
     @GetMapping("/checkout/{id}")
     public String checkout(@PathVariable Long id, Model model) {
@@ -97,10 +73,22 @@ public class PaymentController {
         }
 
         model.addAttribute("competicio", competicioDTO);
-        model.addAttribute("competicioId", id);
         model.addAttribute("stripePublicKey", API_PUBLIC_KEY);
 
         return "charge"; // Cargar la vista de pago
     }
-}
 
+    @PostMapping("/create-charge/{id}")
+    public @ResponseBody Response createCharge(@RequestParam String email, @RequestParam String stripeToken, @PathVariable Long id) {
+        Competicio competicio = competicioService.getCompeticioById(id);
+        if (competicio == null) {
+            return new Response(false, "Competition not found.");
+        }
+
+        String chargeId = stripeService.createCharge(email, stripeToken, competicio.getPreu(), competicio.getNom(), competicio.getDataInici().toString(), competicio.getDataFi().toString());
+        if (chargeId == null) {
+            return new Response(false, "An error occurred while trying to create a charge.");
+        }
+        return new Response(true, "Success! Your charge id is " + chargeId);
+    }
+}

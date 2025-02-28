@@ -29,6 +29,7 @@ public class Usuari {
     @Column(name = "id_rol", nullable = false)
     private int idRol;  // o Long, dependiendo de la base de datos
 
+
     public Long getId() {
         return id;
     }
