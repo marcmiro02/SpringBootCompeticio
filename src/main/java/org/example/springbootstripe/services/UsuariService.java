@@ -45,4 +45,9 @@ public class UsuariService {
     public Usuari findByNomUsuari(String username) {
         return usuariRepository.findByNomUsuari(username);
     }
+
+    public void updatePassword(Usuari usuari, String newPassword) {
+        usuari.setContrasenya(newPassword);
+        usuariRepository.save(usuari);
+    }
 }

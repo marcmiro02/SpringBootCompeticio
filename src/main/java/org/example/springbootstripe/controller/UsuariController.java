@@ -199,7 +199,7 @@ public class UsuariController {
 
             return "perfil/competicionsPerfil";
         }else{
-            return "redirect:/home/";
+            return "redirect:/";
         }
     }
     @GetMapping("/competicionsGestio")
@@ -231,9 +231,10 @@ public class UsuariController {
             return "administrador/competicionsGestio";
         } else {
             // Manejar el caso en que el usuario no esté logueado
-            return "redirect:/home/";
+            return "redirect:/";
         }
     }
+
 
 
 
